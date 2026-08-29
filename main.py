@@ -1,70 +1,96 @@
-import re
-import requests
+import time
+from playwright.sync_api import sync_playwright
 
 CHANNELS = {
     "Trans7": "https://20.detik.com/live/trans-7",
     "Trans TV": "https://20.detik.com/live/trans-tv",
 }
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/152.0.0.0 Safari/537.36"
-    ),
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "id,en-US;q=0.9,en;q=0.8",
-    "Referer": "https://20.detik.com/",
-}
+
+def capture_stream(page_url):
+    m3u8_url = None
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-blink-features=AutomationControlled",
+                "--autoplay-policy=no-user-gesture-required",
+            ],
+        )
+
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            viewport={"width": 1280, "height": 720},
+        )
+
+        page = context.new_page()
+
+        # Bypass navigator.webdriver detection
+        page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+
+        # Tangkap request jaringan yang meminta file playlist.m3u8 beserta wowzatoken
+        def handle_request(request):
+            nonlocal m3u8_url
+            url = request.url
+            if "playlist.m3u8" in url and "wowzatoken" in url:
+                if not m3u8_url:
+                    m3u8_url = url
+
+        page.on("request", handle_request)
+
+        try:
+            page.goto(page_url, timeout=30000, wait_until="domcontentloaded")
+            time.sleep(3)
+
+            # Klik paksa area player video agar videojs mengirim request m3u8
+            try:
+                page.click("video", timeout=3000)
+            except Exception:
+                page.mouse.click(400, 300)
+
+            # Tunggu hingga URL m3u8 tertangkap
+            for _ in range(20):
+                if m3u8_url:
+                    break
+                time.sleep(0.5)
+
+        except Exception as e:
+            print(f"  [!] Error: {e}")
+        finally:
+            browser.close()
+
+    return m3u8_url
 
 
-def get_m3u8_direct(page_url):
-    session = requests.Session()
-    try:
-        res = session.get(page_url, headers=HEADERS, timeout=10)
-        res.raise_for_status()
-
-        pattern = r'https://video\.detik\.com/[^"\']+\.m3u8\?[^"\']+'
-        matches = re.findall(pattern, res.text)
-
-        if matches:
-            return matches[0]
-
-        embed_pattern = r'https://20\.detik\.com/watch/[^"\']+'
-        embed_matches = re.findall(embed_pattern, res.text)
-
-        if embed_matches:
-            embed_url = embed_matches[0]
-            embed_res = session.get(embed_url, headers=HEADERS, timeout=10)
-            matches_embed = re.findall(pattern, embed_res.text)
-            if matches_embed:
-                return matches_embed[0]
-
-    except Exception as e:
-        print(f"  [!] Error on {page_url}: {e}")
-
-    return None
-
-
-def generate_playlist():
+def main():
     m3u_content = "#EXTM3U\n"
+    success_count = 0
 
-    for name, url in CHANNELS.items():
-        print(f"Fetching stream for {name}...")
-        stream_url = get_m3u8_direct(url)
+    for name, page_url in CHANNELS.items():
+        print(f"Mengambil stream untuk {name}...")
+        stream_url = capture_stream(page_url)
 
         if stream_url:
-            print(f"  [+] Success: {stream_url[:75]}...")
+            print(f"  [+] Berhasil: {stream_url[:75]}...")
             m3u_content += f'#EXTINF:-1 tvg-name="{name}", {name}\n'
             m3u_content += f"{stream_url}\n"
+            success_count += 1
         else:
-            print(f"  [-] Failed to retrieve m3u8 for {name}")
+            print(f"  [-] Gagal mendapatkan stream {name}")
 
-    with open("playlist.m3u", "w", encoding="utf-8") as f:
-        f.write(m3u_content)
-
-    print("\n[✓] Finished processing playlist.m3u")
+    if success_count > 0:
+        with open("playlist.m3u", "w", encoding="utf-8") as f:
+            f.write(m3u_content)
+        print("\n[✓] Playlist berhasil diperbarui di playlist.m3u")
+    else:
+        print("\n[!] Gagal mengambil stream.")
 
 
 if __name__ == "__main__":
-    generate_playlist()
+    main()
