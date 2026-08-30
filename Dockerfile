@@ -7,6 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY proxy.py .
 
-EXPOSE 5000
-
 CMD ["python", "proxy.py"]
