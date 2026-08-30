@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 from urllib.parse import unquote, urljoin
@@ -99,6 +100,7 @@ def background_token_worker():
 @app.route("/playlist.m3u")
 def get_master_playlist():
     m3u_text = "#EXTM3U\n"
+    scheme = request.headers.get("X-Forwarded-Proto", "http")
     host_url = request.host
 
     for channel_key in CHANNELS.keys():
@@ -110,7 +112,7 @@ def get_master_playlist():
             else channel_key.upper()
         )
         m3u_text += f'#EXTINF:-1 tvg-id="{channel_key}" tvg-name="{channel_name}", {channel_name}\n'
-        m3u_text += f"http://{host_url}/live/{channel_key}\n"
+        m3u_text += f"{scheme}://{host_url}/live/{channel_key}\n"
 
     return Response(m3u_text, content_type="audio/x-mpegurl")
 
@@ -140,6 +142,7 @@ def stream_proxy(channel):
 
     content = res.text
     base_url = m3u8_url.rsplit("/", 1)[0] + "/"
+    scheme = request.headers.get("X-Forwarded-Proto", "http")
 
     lines = content.splitlines()
     new_lines = []
@@ -152,7 +155,7 @@ def stream_proxy(channel):
             )
             encoded_url = requests.utils.quote(full_url)
             new_lines.append(
-                f"http://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+                f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
             )
 
     return Response(
@@ -178,6 +181,8 @@ def ts_proxy():
         "Origin": "https://20.detik.com",
     }
 
+    scheme = request.headers.get("X-Forwarded-Proto", "http")
+
     if ".m3u8" in target_url:
         res = requests.get(target_url, headers=headers, cookies=cookies)
         if res.status_code != 200:
@@ -195,7 +200,7 @@ def ts_proxy():
                 )
                 encoded_url = requests.utils.quote(full_url)
                 new_lines.append(
-                    f"http://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
                 )
 
         return Response(
@@ -216,5 +221,6 @@ if __name__ == "__main__":
     )
     worker_thread.start()
 
-    print("The proxy is running at http://127.0.0.1:5000")
-    app.run(host="0.0.0.0", port=5000, threaded=True)
+    port = int(os.environ.get("PORT", 5000))
+    print(f"[+] Proxy Server aktif di port {port}")
+    app.run(host="0.0.0.0", port=port, threaded=True)
