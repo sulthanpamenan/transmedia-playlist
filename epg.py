@@ -3,6 +3,7 @@ import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import requests
+from playwright.sync_api import sync_playwright
 
 HEADERS = {
     "User-Agent": (
@@ -44,8 +45,8 @@ def get_transtv_schedule():
                             programs.append({
                                 "start": start_time,
                                 "title": title,
-                                "desc": f"Saksikan tayangan {title} hanya di Trans TV.",
-                                "category": "Entertainment",
+                                "desc": f"Saksikan {title} di Trans TV.",
+                                "category": "General",
                             })
     except Exception as e:
         print(f"[!] Error Trans TV EPG: {e}")
@@ -58,40 +59,41 @@ def get_trans7_schedule():
     url = "https://sevenhub.id/live"
 
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
-        if res.status_code == 200:
-            build_id_match = re.search(r'"buildId":"([^"]+)"', res.text)
-            if build_id_match:
-                build_id = build_id_match.group(1)
-                json_url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
-                json_res = requests.get(json_url, headers=HEADERS, timeout=15)
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox"],
+            )
+            context = browser.new_context(user_agent=HEADERS["User-Agent"])
+            page = context.new_page()
 
-                if json_res.status_code == 200:
-                    data = json_res.json()
-                    page_props = data.get("pageProps", {})
-                    schedules = (
-                        page_props.get("schedule", {})
-                        or page_props.get("liveSchedule", [])
-                    )
+            page.goto(url, timeout=30000, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
 
-                    for item in schedules:
-                        title = (
-                            item.get("title")
-                            or item.get("program_name")
-                            or item.get("name")
-                        )
-                        start_time = item.get("start_time") or item.get("time")
-                        desc = item.get("description") or f"Saksikan tayangan {title} di Trans 7."
-                        if start_time and title:
-                            clean_time = start_time[:5]
-                            programs.append({
-                                "start": clean_time,
-                                "title": title.upper(),
-                                "desc": desc,
-                                "category": "General",
-                            })
+            html = page.content()
+            soup = BeautifulSoup(html, "html.parser")
+
+            items = soup.find_all(
+                "div", class_=re.compile(r"LiveScheduleNew_scheduleItem")
+            ) or soup.find_all("div", class_=re.compile(r"scheduleItem|schedule_item"))
+
+            for item in items:
+                text = item.text.strip()
+                time_match = re.search(r"(\d{2}:\d{2})\s*-\s*\d{2}:\d{2}|\b(\d{2}:\d{2})\b", text)
+                if time_match:
+                    start_time = time_match.group(1) or time_match.group(2)
+                    clean_title = re.sub(r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text).strip()
+                    if start_time and clean_title:
+                        programs.append({
+                            "start": start_time,
+                            "title": clean_title.upper(),
+                            "desc": f"Saksikan {clean_title} di Trans 7.",
+                            "category": "General",
+                        })
+
+            browser.close()
     except Exception as e:
-        print(f"[!] Error Trans 7 EPG: {e}")
+        print(f"[!] Error Trans 7 Playwright EPG: {e}")
 
     return programs
 
@@ -158,7 +160,9 @@ def build_xmltv(transtv_progs, trans7_progs):
     tree = ET.ElementTree(tv)
     ET.indent(tree, space="  ")
     tree.write("epg.xml", encoding="utf-8", xml_declaration=True)
-    print("[✓] epg.xml successfully generated with full details!")
+    print(
+        f"[✓] epg.xml successfully created! (Trans TV: {len(transtv_progs)} programs, Trans 7: {len(trans7_progs)} programs)"
+    )
 
 
 if __name__ == "__main__":
