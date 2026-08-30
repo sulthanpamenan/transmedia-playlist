@@ -1,9 +1,9 @@
 import os
-import re
 import threading
 import time
 from urllib.parse import unquote, urljoin
 from flask import Flask, Response, request
+from playwright.sync_api import sync_playwright
 import requests
 
 app = Flask(__name__)
@@ -21,58 +21,76 @@ USER_AGENT = (
 STREAM_CACHE = {}
 
 
-def fetch_detik_token(page_url):
-    headers = {
-        "User-Agent": USER_AGENT,
-        "Referer": "https://20.detik.com/",
-    }
+def fetch_token_playwright_light(page_url):
     m3u8_url = None
     cookies_dict = {}
 
     try:
-        session = requests.Session()
-        res = session.get(page_url, headers=headers, timeout=15)
+        with sync_playwright() as p:
+            # Gunakan Chromium dengan argumen paling hemat memori
+            browser = p.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu",
+                    "--no-zygote",
+                    "--single-process",
+                ],
+            )
+            context = browser.new_context(
+                user_agent=USER_AGENT,
+                viewport={"width": 800, "height": 600},
+                extra_http_headers={"Referer": "https://20.detik.com/"},
+            )
+            page = context.new_page()
 
-        if res.status_code == 200:
-            pattern = r'https://[^\s"\']+\.m3u8\?[^\s"\']*wowzatoken[^\s"\']*'
-            matches = re.findall(pattern, res.text)
+            def handle_request(req):
+                nonlocal m3u8_url
+                url = req.url
+                if ".m3u8" in url and "wowzatoken" in url:
+                    if not m3u8_url:
+                        m3u8_url = url
 
-            if matches:
-                m3u8_url = matches[0].replace("\\/", "")
-            else:
-                video_id_match = re.search(r'video_id\s*:\s*["\']([^"\']+)["\']', res.text) or \
-                                 re.search(r'data-id=["\']([^"\']+)["\']', res.text)
-                
-                if video_id_match:
-                    video_id = video_id_match.group(1)
-                    api_url = f"https://20.detik.com/api/video/stream?id={video_id}"
-                    api_res = session.get(api_url, headers=headers)
-                    if api_res.status_code == 200:
-                        data = api_res.json()
-                        m3u8_url = data.get("stream_url") or data.get("m3u8")
+            page.on("request", handle_request)
 
-            for c in session.cookies:
-                cookies_dict[c.name] = c.value
+            page.goto(page_url, timeout=20000, wait_until="domcontentloaded")
+            time.sleep(1.5)
 
+            try:
+                page.click("video", timeout=1500)
+            except Exception:
+                page.mouse.click(400, 300)
+
+            for _ in range(10):
+                if m3u8_url:
+                    break
+                time.sleep(0.5)
+
+            for c in context.cookies():
+                cookies_dict[c["name"]] = c["value"]
+
+            browser.close()
     except Exception as e:
-        print(f"[!] Fetch Error ({page_url}): {e}")
+        print(f"[!] Playwright Fetch Error ({page_url}): {e}")
 
     return m3u8_url, cookies_dict
 
 
 def background_token_worker():
     while True:
-        print("\n[+] Background Worker: Fetching stream tokens...")
+        print("\n[+] Background Worker: Fetching M3U8 tokens...")
         for key, url in CHANNELS.items():
-            token_url, cookies = fetch_detik_token(url)
+            token_url, cookies = fetch_token_playwright_light(url)
             if token_url:
                 STREAM_CACHE[key] = {"url": token_url, "cookies": cookies}
-                print(f"  [✓] {key} token successfully cached!")
+                print(f"  [✓] {key} token updated!")
             else:
-                print(f"  [!] Failed to extract token for {key}")
+                print(f"  [!] Failed to update {key}")
 
-        print("[+] Background Worker: Waiting 15 minutes for next refresh.\n")
-        time.sleep(900)
+        print("[+] Background Worker: Waiting 20 minutes for next refresh.\n")
+        time.sleep(1200)
 
 
 worker_thread = threading.Thread(target=background_token_worker, daemon=True)
@@ -111,8 +129,9 @@ def stream_proxy(channel):
 
     cached_data = STREAM_CACHE.get(channel)
     
+    # Ambil token darurat secara langsung jika cache belum siap
     if not cached_data or not cached_data.get("url"):
-        token_url, cookies = fetch_detik_token(CHANNELS[channel])
+        token_url, cookies = fetch_token_playwright_light(CHANNELS[channel])
         if token_url:
             cached_data = {"url": token_url, "cookies": cookies}
             STREAM_CACHE[channel] = cached_data
@@ -128,37 +147,34 @@ def stream_proxy(channel):
         "Origin": "https://20.detik.com",
     }
 
-    try:
-        res = requests.get(m3u8_url, headers=headers, cookies=cookies, timeout=10)
-        if res.status_code != 200:
-            token_url, cookies = fetch_detik_token(CHANNELS[channel])
-            if token_url:
-                STREAM_CACHE[channel] = {"url": token_url, "cookies": cookies}
-                res = requests.get(token_url, headers=headers, cookies=cookies, timeout=10)
+    res = requests.get(m3u8_url, headers=headers, cookies=cookies)
+    if res.status_code != 200:
+        # Jika token kedaluwarsa/memicu 403/503, paksa refresh token baru
+        token_url, cookies = fetch_token_playwright_light(CHANNELS[channel])
+        if token_url:
+            STREAM_CACHE[channel] = {"url": token_url, "cookies": cookies}
+            res = requests.get(token_url, headers=headers, cookies=cookies)
 
-        if res.status_code != 200:
-            return f"Error CDN Detik: {res.status_code}", res.status_code
+    if res.status_code != 200:
+        return f"Error CDN Detik: {res.status_code}", res.status_code
 
-        content = res.text
-        base_url = m3u8_url.rsplit("/", 1)[0] + "/"
-        scheme = request.headers.get("X-Forwarded-Proto", "https")
+    content = res.text
+    base_url = m3u8_url.rsplit("/", 1)[0] + "/"
+    scheme = request.headers.get("X-Forwarded-Proto", "https")
 
-        lines = content.splitlines()
-        new_lines = []
-        for line in lines:
-            if line.startswith("#") or not line.strip():
-                new_lines.append(line)
-            else:
-                full_url = line if line.startswith("http") else urljoin(base_url, line)
-                encoded_url = requests.utils.quote(full_url)
-                new_lines.append(
-                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
-                )
+    lines = content.splitlines()
+    new_lines = []
+    for line in lines:
+        if line.startswith("#") or not line.strip():
+            new_lines.append(line)
+        else:
+            full_url = line if line.startswith("http") else urljoin(base_url, line)
+            encoded_url = requests.utils.quote(full_url)
+            new_lines.append(
+                f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+            )
 
-        return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
-
-    except Exception as e:
-        return f"Stream error: {e}", 500
+    return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
 
 
 @app.route("/ts_proxy")
