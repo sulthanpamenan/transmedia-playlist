@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import html
 import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
@@ -36,16 +37,17 @@ def get_transtv_schedule():
 
                     if time_elem:
                         start_time = time_elem.text.strip()
-                        title = (
+                        raw_title = (
                             title_elem.text.replace(start_time, "")
                             .strip()
                             .upper()
                         )
-                        if start_time and title:
+                        clean_title = html.unescape(raw_title)
+                        if start_time and clean_title:
                             programs.append({
                                 "start": start_time,
-                                "title": title,
-                                "desc": f"Saksikan {title} di Trans TV.",
+                                "title": clean_title,
+                                "desc": f"Saksikan {clean_title} di Trans TV.",
                                 "category": "General",
                             })
     except Exception as e:
@@ -70,8 +72,8 @@ def get_trans7_schedule():
             page.goto(url, timeout=30000, wait_until="domcontentloaded")
             page.wait_for_timeout(3000)
 
-            html = page.content()
-            soup = BeautifulSoup(html, "html.parser")
+            page_html = page.content()
+            soup = BeautifulSoup(page_html, "html.parser")
 
             items = soup.find_all(
                 "div", class_=re.compile(r"LiveScheduleNew_scheduleItem")
@@ -79,14 +81,19 @@ def get_trans7_schedule():
 
             for item in items:
                 text = item.text.strip()
-                time_match = re.search(r"(\d{2}:\d{2})\s*-\s*\d{2}:\d{2}|\b(\d{2}:\d{2})\b", text)
+                time_match = re.search(
+                    r"(\d{2}:\d{2})\s*-\s*\d{2}:\d{2}|\b(\d{2}:\d{2})\b", text
+                )
                 if time_match:
                     start_time = time_match.group(1) or time_match.group(2)
-                    clean_title = re.sub(r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text).strip()
+                    raw_title = re.sub(
+                        r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text
+                    ).strip()
+                    clean_title = html.unescape(raw_title).upper()
                     if start_time and clean_title:
                         programs.append({
                             "start": start_time,
-                            "title": clean_title.upper(),
+                            "title": clean_title,
                             "desc": f"Saksikan {clean_title} di Trans 7.",
                             "category": "General",
                         })
@@ -151,7 +158,9 @@ def build_xmltv(transtv_progs, trans7_progs):
                 desc_elem = ET.SubElement(prog_elem, "desc", {"lang": "id"})
                 desc_elem.text = p.get("desc", "")
 
-                category_elem = ET.SubElement(prog_elem, "category", {"lang": "id"})
+                category_elem = ET.SubElement(
+                    prog_elem, "category", {"lang": "id"}
+                )
                 category_elem.text = p.get("category", "General")
 
             except Exception:
