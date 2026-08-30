@@ -1,31 +1,66 @@
 import os
 from urllib.parse import unquote, urljoin
-from flask import Flask, Response, request, jsonify
+from flask import Flask, Response, jsonify, request
 import requests
 
 app = Flask(__name__)
 
-CHANNELS = ["trans7", "transtv"]
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+CHANNELS = {
+    "trans7": {
+        "name": "Trans 7",
+        "logo": "https://www.trans7.co.id/assets/front/images/logo/logo-trans7.png",
+    },
+    "transtv": {
+        "name": "Trans TV",
+        "logo": "https://www.transtv.co.id/themes/v25.7/src/assets/logo/transtv-white.png",
+    },
+}
+
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+)
 
 STREAM_CACHE = {}
+
 
 @app.route("/")
 def index():
     return "Proxy Transmedia Active! Access playlist via /playlist.m3u"
+
 
 @app.route("/update_token", methods=["POST"])
 def update_token():
     data = request.json
     if not data or "channel" not in data or "url" not in data:
         return jsonify({"error": "invalid payload"}), 400
-    
+
     STREAM_CACHE[data["channel"]] = {
         "url": data["url"],
-        "cookies": data.get("cookies", {})
+        "cookies": data.get("cookies", {}),
     }
-    print(f"[✓] Token {data['channel']} successfully updated from GitHub Actions!")
+    print(f"[✓] Token {data['channel']} successfully updated!")
     return jsonify({"status": "success", "channel": data["channel"]})
+
+
+@app.route("/update_epg", methods=["POST"])
+def update_epg():
+    if "file" not in request.files:
+        return jsonify({"error": "no file uploaded"}), 400
+
+    file = request.files["file"]
+    file.save("epg.xml")
+    print("[✓] epg.xml was successfully received and updated on Railway!")
+    return jsonify({"status": "success"})
+
+
+@app.route("/epg.xml")
+def get_epg():
+    if os.path.exists("epg.xml"):
+        with open("epg.xml", "r", encoding="utf-8") as f:
+            return Response(f.read(), content_type="text/xml")
+    return "EPG is not yet available", 404
+
 
 @app.route("/playlist.m3u")
 def get_master_playlist():
@@ -33,12 +68,15 @@ def get_master_playlist():
     scheme = request.headers.get("X-Forwarded-Proto", "https")
     host_url = request.host
 
-    for channel_key in CHANNELS:
-        channel_name = "Trans 7" if channel_key == "trans7" else "Trans TV"
-        m3u_text += f'#EXTINF:-1 tvg-id="{channel_key}" tvg-name="{channel_name}", {channel_name}\n'
-        m3u_text += f"{scheme}://{host_url}/live/{channel_key}\n"
+    for key, info in CHANNELS.items():
+        m3u_text += (
+            f'#EXTINF:-1 tvg-id="{key}" tvg-name="{info["name"]}" '
+            f'tvg-logo="{info["logo"]}" group-title="General", {info["name"]}\n'
+        )
+        m3u_text += f"{scheme}://{host_url}/live/{key}\n"
 
     return Response(m3u_text, content_type="audio/x-mpegurl")
+
 
 @app.route("/live/<channel>")
 def stream_proxy(channel):
@@ -47,11 +85,15 @@ def stream_proxy(channel):
 
     cached_data = STREAM_CACHE.get(channel)
     if not cached_data or not cached_data.get("url"):
-        return "Waiting for a token from GitHub Actions. Please try again in a minute...", 503
+        return "Waiting for token. Please try again...", 503
 
     m3u8_url = cached_data["url"]
     cookies = cached_data["cookies"]
-    headers = {"User-Agent": USER_AGENT, "Referer": "https://20.detik.com/", "Origin": "https://20.detik.com"}
+    headers = {
+        "User-Agent": USER_AGENT,
+        "Referer": "https://20.detik.com/",
+        "Origin": "https://20.detik.com",
+    }
 
     res = requests.get(m3u8_url, headers=headers, cookies=cookies)
     if res.status_code != 200:
@@ -67,11 +109,18 @@ def stream_proxy(channel):
         if line.startswith("#") or not line.strip():
             new_lines.append(line)
         else:
-            full_url = line if line.startswith("http") else urljoin(base_url, line)
+            full_url = (
+                line if line.startswith("http") else urljoin(base_url, line)
+            )
             encoded_url = requests.utils.quote(full_url)
-            new_lines.append(f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}")
+            new_lines.append(
+                f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+            )
 
-    return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
+    return Response(
+        "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
+    )
+
 
 @app.route("/ts_proxy")
 def ts_proxy():
@@ -84,7 +133,11 @@ def ts_proxy():
     target_url = unquote(segment_url)
     cached_data = STREAM_CACHE.get(channel, {})
     cookies = cached_data.get("cookies", {})
-    headers = {"User-Agent": USER_AGENT, "Referer": "https://20.detik.com/", "Origin": "https://20.detik.com"}
+    headers = {
+        "User-Agent": USER_AGENT,
+        "Referer": "https://20.detik.com/",
+        "Origin": "https://20.detik.com",
+    }
     scheme = request.headers.get("X-Forwarded-Proto", "https")
 
     if ".m3u8" in target_url:
@@ -99,14 +152,25 @@ def ts_proxy():
             if line.startswith("#") or not line.strip():
                 new_lines.append(line)
             else:
-                full_url = line if line.startswith("http") else urljoin(base_url, line)
+                full_url = (
+                    line if line.startswith("http") else urljoin(base_url, line)
+                )
                 encoded_url = requests.utils.quote(full_url)
-                new_lines.append(f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}")
+                new_lines.append(
+                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+                )
 
-        return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
+        return Response(
+            "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
+        )
 
-    res = requests.get(target_url, headers=headers, cookies=cookies, stream=True)
-    return Response(res.iter_content(chunk_size=32768), content_type="video/MP2T")
+    res = requests.get(
+        target_url, headers=headers, cookies=cookies, stream=True
+    )
+    return Response(
+        res.iter_content(chunk_size=32768), content_type="video/MP2T"
+    )
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
