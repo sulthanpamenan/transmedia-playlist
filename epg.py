@@ -41,9 +41,12 @@ def get_transtv_schedule():
                             .upper()
                         )
                         if start_time and title:
-                            programs.append(
-                                {"start": start_time, "title": title}
-                            )
+                            programs.append({
+                                "start": start_time,
+                                "title": title,
+                                "desc": f"Saksikan tayangan {title} hanya di Trans TV.",
+                                "category": "Entertainment",
+                            })
     except Exception as e:
         print(f"[!] Error Trans TV EPG: {e}")
 
@@ -78,11 +81,15 @@ def get_trans7_schedule():
                             or item.get("name")
                         )
                         start_time = item.get("start_time") or item.get("time")
+                        desc = item.get("description") or f"Saksikan tayangan {title} di Trans 7."
                         if start_time and title:
                             clean_time = start_time[:5]
-                            programs.append(
-                                {"start": clean_time, "title": title.upper()}
-                            )
+                            programs.append({
+                                "start": clean_time,
+                                "title": title.upper(),
+                                "desc": desc,
+                                "category": "General",
+                            })
     except Exception as e:
         print(f"[!] Error Trans 7 EPG: {e}")
 
@@ -139,13 +146,19 @@ def build_xmltv(transtv_progs, trans7_progs):
                 title_elem = ET.SubElement(prog_elem, "title", {"lang": "id"})
                 title_elem.text = p["title"]
 
+                desc_elem = ET.SubElement(prog_elem, "desc", {"lang": "id"})
+                desc_elem.text = p.get("desc", "")
+
+                category_elem = ET.SubElement(prog_elem, "category", {"lang": "id"})
+                category_elem.text = p.get("category", "General")
+
             except Exception:
                 continue
 
     tree = ET.ElementTree(tv)
     ET.indent(tree, space="  ")
     tree.write("epg.xml", encoding="utf-8", xml_declaration=True)
-    print("[✓] epg.xml successfully created!")
+    print("[✓] epg.xml successfully generated with full details!")
 
 
 if __name__ == "__main__":
