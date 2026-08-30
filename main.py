@@ -23,38 +23,46 @@ def capture_stream(page_url):
         )
 
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/122.0.0.0 Safari/537.36"
+            ),
             viewport={"width": 1280, "height": 720},
+            extra_http_headers={
+                "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Referer": "https://20.detik.com/",
+            },
         )
 
         page = context.new_page()
 
-        # Bypass navigator.webdriver detection
+        # Stealth: Sembunyikan flag navigator.webdriver
         page.add_init_script(
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+            "Object.defineProperty(navigator, 'webdriver', {get: () =>"
+            " undefined})"
         )
 
-        # Tangkap request jaringan yang meminta file playlist.m3u8 beserta wowzatoken
         def handle_request(request):
             nonlocal m3u8_url
             url = request.url
-            if "playlist.m3u8" in url and "wowzatoken" in url:
+            if ".m3u8" in url and "wowzatokenhash" in url:
                 if not m3u8_url:
                     m3u8_url = url
 
         page.on("request", handle_request)
 
         try:
-            page.goto(page_url, timeout=30000, wait_until="domcontentloaded")
+            page.goto(page_url, timeout=40000, wait_until="domcontentloaded")
             time.sleep(3)
 
-            # Klik paksa area player video agar videojs mengirim request m3u8
+            # Simulasi interaksi klik pada player video
             try:
                 page.click("video", timeout=3000)
             except Exception:
-                page.mouse.click(400, 300)
+                page.mouse.click(500, 300)
 
-            # Tunggu hingga URL m3u8 tertangkap
+            # Tunggu hingga token m3u8 terdeteksi
             for _ in range(20):
                 if m3u8_url:
                     break
@@ -73,7 +81,7 @@ def main():
     success_count = 0
 
     for name, page_url in CHANNELS.items():
-        print(f"Mengambil stream untuk {name}...")
+        print(f"Mengambil stream {name}...")
         stream_url = capture_stream(page_url)
 
         if stream_url:
@@ -89,7 +97,7 @@ def main():
             f.write(m3u_content)
         print("\n[✓] Playlist berhasil diperbarui di playlist.m3u")
     else:
-        print("\n[!] Gagal mengambil stream.")
+        print("\n[!] Gagal memperbarui playlist.")
 
 
 if __name__ == "__main__":
