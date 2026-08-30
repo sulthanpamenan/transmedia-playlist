@@ -7,4 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY proxy.py .
 
+ENV PORT=5000
+
 CMD ["python", "proxy.py"]
