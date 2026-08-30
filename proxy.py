@@ -111,31 +111,34 @@ def stream_proxy(channel):
         "Origin": "https://20.detik.com",
     }
 
-    res = requests.get(m3u8_url, headers=headers, cookies=cookies)
-    if res.status_code != 200:
-        return f"Error CDN Detik: {res.status_code}", res.status_code
+    try:
+        res = requests.get(m3u8_url, headers=headers, cookies=cookies, timeout=10)
+        if res.status_code != 200:
+            return f"Error CDN Detik: {res.status_code}", res.status_code
 
-    content = res.text
-    base_url = m3u8_url.rsplit("/", 1)[0] + "/"
-    scheme = request.headers.get("X-Forwarded-Proto", "https")
+        content = res.text
+        base_url = m3u8_url.rsplit("/", 1)[0] + "/"
+        scheme = request.headers.get("X-Forwarded-Proto", "https")
 
-    lines = content.splitlines()
-    new_lines = []
-    for line in lines:
-        if line.startswith("#") or not line.strip():
-            new_lines.append(line)
-        else:
-            full_url = (
-                line if line.startswith("http") else urljoin(base_url, line)
-            )
-            encoded_url = requests.utils.quote(full_url)
-            new_lines.append(
-                f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
-            )
+        lines = content.splitlines()
+        new_lines = []
+        for line in lines:
+            if line.startswith("#") or not line.strip():
+                new_lines.append(line)
+            else:
+                full_url = (
+                    line if line.startswith("http") else urljoin(base_url, line)
+                )
+                encoded_url = requests.utils.quote(full_url)
+                new_lines.append(
+                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+                )
 
-    return Response(
-        "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
-    )
+        return Response(
+            "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
+        )
+    except Exception as e:
+        return f"Stream Proxy Error: {e}", 500
 
 
 @app.route("/ts_proxy")
@@ -157,35 +160,41 @@ def ts_proxy():
     scheme = request.headers.get("X-Forwarded-Proto", "https")
 
     if ".m3u8" in target_url:
-        res = requests.get(target_url, headers=headers, cookies=cookies)
-        if res.status_code != 200:
-            return f"Error CDN: {res.status_code}", res.status_code
+        try:
+            res = requests.get(target_url, headers=headers, cookies=cookies, timeout=10)
+            if res.status_code != 200:
+                return f"Error CDN: {res.status_code}", res.status_code
 
-        base_url = target_url.rsplit("/", 1)[0] + "/"
-        lines = res.text.splitlines()
-        new_lines = []
-        for line in lines:
-            if line.startswith("#") or not line.strip():
-                new_lines.append(line)
-            else:
-                full_url = (
-                    line if line.startswith("http") else urljoin(base_url, line)
-                )
-                encoded_url = requests.utils.quote(full_url)
-                new_lines.append(
-                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
-                )
+            base_url = target_url.rsplit("/", 1)[0] + "/"
+            lines = res.text.splitlines()
+            new_lines = []
+            for line in lines:
+                if line.startswith("#") or not line.strip():
+                    new_lines.append(line)
+                else:
+                    full_url = (
+                        line if line.startswith("http") else urljoin(base_url, line)
+                    )
+                    encoded_url = requests.utils.quote(full_url)
+                    new_lines.append(
+                        f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
+                    )
 
-        return Response(
-            "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
+            return Response(
+                "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
+            )
+        except Exception as e:
+            return f"Manifest Error: {e}", 500
+
+    try:
+        res = requests.get(
+            target_url, headers=headers, cookies=cookies, stream=True, timeout=15
         )
-
-    res = requests.get(
-        target_url, headers=headers, cookies=cookies, stream=True
-    )
-    return Response(
-        res.iter_content(chunk_size=32768), content_type="video/MP2T"
-    )
+        return Response(
+            res.iter_content(chunk_size=32768), content_type="video/MP2T"
+        )
+    except Exception as e:
+        return f"Segment Error: {e}", 500
 
 
 if __name__ == "__main__":
