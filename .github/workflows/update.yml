@@ -18,5 +18,10 @@ jobs:
         run: |
           pip install playwright requests
           playwright install chromium
-      - name: Run Fetcher Script
-        run: python fetcher.py
+      - name: Run Fetcher & EPG Script
+        run: |
+          python fetcher.py
+          python epg.py
+      - name: Push EPG to Railway
+        run: |
+          curl -F "file=@epg.xml" https://transmedia-playlist.up.railway.app/update_epg || true
