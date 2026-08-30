@@ -64,6 +64,10 @@ def background_token_worker():
         time.sleep(1800)
 
 
+worker_thread = threading.Thread(target=background_token_worker, daemon=True)
+worker_thread.start()
+
+
 @app.route("/")
 def index():
     return "Proxy Transmedia Active! Access playlist via /playlist.m3u"
@@ -180,14 +184,5 @@ def ts_proxy():
 
 
 if __name__ == "__main__":
-    worker_thread = threading.Thread(target=background_token_worker, daemon=True)
-    worker_thread.start()
-
-    port_env = os.environ.get("PORT", "5000")
-    try:
-        port = int(port_env)
-    except ValueError:
-        port = 5000
-
-    print(f"[+] Proxy Server active on port {port}")
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, threaded=True)
