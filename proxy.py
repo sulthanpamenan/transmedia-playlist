@@ -97,10 +97,15 @@ def background_token_worker():
         time.sleep(3600)
 
 
+@app.route("/")
+def index():
+    return "Proxy Transmedia Active! Access playlist via /playlist.m3u"
+
+
 @app.route("/playlist.m3u")
 def get_master_playlist():
     m3u_text = "#EXTM3U\n"
-    scheme = request.headers.get("X-Forwarded-Proto", "http")
+    scheme = request.headers.get("X-Forwarded-Proto", "https")
     host_url = request.host
 
     for channel_key in CHANNELS.keys():
@@ -142,7 +147,7 @@ def stream_proxy(channel):
 
     content = res.text
     base_url = m3u8_url.rsplit("/", 1)[0] + "/"
-    scheme = request.headers.get("X-Forwarded-Proto", "http")
+    scheme = request.headers.get("X-Forwarded-Proto", "https")
 
     lines = content.splitlines()
     new_lines = []
@@ -181,7 +186,7 @@ def ts_proxy():
         "Origin": "https://20.detik.com",
     }
 
-    scheme = request.headers.get("X-Forwarded-Proto", "http")
+    scheme = request.headers.get("X-Forwarded-Proto", "https")
 
     if ".m3u8" in target_url:
         res = requests.get(target_url, headers=headers, cookies=cookies)
@@ -221,6 +226,11 @@ if __name__ == "__main__":
     )
     worker_thread.start()
 
-    port = int(os.environ.get("PORT", 5000))
-    print(f"[+] Proxy Server aktif di port {port}")
+    port_env = os.environ.get("PORT", "5000")
+    try:
+        port = int(port_env)
+    except ValueError:
+        port = 5000
+
+    print(f"[+] Proxy server active on port {port}")
     app.run(host="0.0.0.0", port=port, threaded=True)
