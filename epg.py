@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import html
 import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
@@ -53,23 +52,37 @@ def get_transtv_schedule():
 
 def get_trans7_schedule():
     programs = []
-    url = "https://www.trans7.co.id/schedule"
+    url = "https://sevenhub.id/live"
 
     try:
         res = requests.get(url, headers=HEADERS, timeout=15)
         if res.status_code == 200:
-            soup = BeautifulSoup(res.text, "html.parser")
-            rows = soup.find_all("tr") or soup.find_all(
-                "div", class_=re.compile(r"schedule|item")
-            )
+            build_id_match = re.search(r'"buildId":"([^"]+)"', res.text)
+            if build_id_match:
+                build_id = build_id_match.group(1)
+                json_url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
+                json_res = requests.get(json_url, headers=HEADERS, timeout=15)
 
-            for row in rows:
-                text = row.text.strip()
-                match = re.search(r"(\d{2}:\d{2})\s*(.+)", text)
-                if match:
-                    start_time = match.group(1)
-                    title = match.group(2).strip().upper()
-                    programs.append({"start": start_time, "title": title})
+                if json_res.status_code == 200:
+                    data = json_res.json()
+                    page_props = data.get("pageProps", {})
+                    schedules = (
+                        page_props.get("schedule", {})
+                        or page_props.get("liveSchedule", [])
+                    )
+
+                    for item in schedules:
+                        title = (
+                            item.get("title")
+                            or item.get("program_name")
+                            or item.get("name")
+                        )
+                        start_time = item.get("start_time") or item.get("time")
+                        if start_time and title:
+                            clean_time = start_time[:5]
+                            programs.append(
+                                {"start": clean_time, "title": title.upper()}
+                            )
     except Exception as e:
         print(f"[!] Error Trans 7 EPG: {e}")
 
@@ -96,10 +109,7 @@ def build_xmltv(transtv_progs, trans7_progs):
     now = datetime.now()
     today = now.date()
 
-    for ch_id, progs in [
-        ("transtv", transtv_progs),
-        ("trans7", trans7_progs),
-    ]:
+    for ch_id, progs in [("transtv", transtv_progs), ("trans7", trans7_progs)]:
         for i, p in enumerate(progs):
             try:
                 sh, sm = map(int, p["start"].split(":"))
@@ -109,7 +119,9 @@ def build_xmltv(transtv_progs, trans7_progs):
 
                 if i < len(progs) - 1:
                     nh, nm = map(int, progs[i + 1]["start"].split(":"))
-                    end_dt = datetime(today.year, today.month, today.day, nh, nm)
+                    end_dt = datetime(
+                        today.year, today.month, today.day, nh, nm
+                    )
                     if end_dt <= start_dt:
                         end_dt += timedelta(days=1)
                 else:
@@ -127,13 +139,13 @@ def build_xmltv(transtv_progs, trans7_progs):
                 title_elem = ET.SubElement(prog_elem, "title", {"lang": "id"})
                 title_elem.text = p["title"]
 
-            except Exception as e:
+            except Exception:
                 continue
 
     tree = ET.ElementTree(tv)
     ET.indent(tree, space="  ")
     tree.write("epg.xml", encoding="utf-8", xml_declaration=True)
-    print("[✓] epg.xml successfully generated!")
+    print("[✓] epg.xml successfully created!")
 
 
 if __name__ == "__main__":
