@@ -1,0 +1,28 @@
+name: Push EPG to Railway
+
+on:
+  schedule:
+    - cron: '30 17,5 * * *'
+  workflow_dispatch:
+
+jobs:
+  update_epg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run EPG Script
+        run: python epg.py
+
+      - name: Push EPG to Railway
+        run: |
+          curl -F "file=@epg.xml" https://transmedia-playlist.up.railway.app/update_epg || true
