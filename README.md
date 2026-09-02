@@ -68,7 +68,12 @@ If this project is helpful to you, consider supporting the developer to keep thi
   <img src="https://img.shields.io/badge/Saweria-Support_Project-orange?style=for-the-badge&logo=coffee" alt="Support via Saweria">
 </a>
 
-</div>
-
 ---
 
+### 🌐 International Donation
+
+<a href="https://buymeacoffee.com/sulthanpamenan" target="_blank">
+  <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-Donate-yellow?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee">
+</a>
+
+</div>
