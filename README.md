@@ -46,6 +46,16 @@ Directly import these URLs into your preferred IPTV client:
 
 ---
 
+## ⚠️ Disclaimer
+
+This repository and its automated proxy service are intended strictly for educational, personal, and non-commercial usage. 
+
+- **Content Ownership:** All video streams, channel names, logos, schedule metadata, and intellectual property belong to their respective copyright holders (**Transmedia / PT Trans Media Corpora**).
+- **No Hosting:** This service does not host, re-stream, store, or sell any media content. It acts purely as a dynamic parser and reverse-proxy for public live stream URLs.
+- **Service Availability:** The developer provides no guarantees regarding stream uptime, video quality, or bufferless playback, as performance depends on third-party CDN source availability.
+
+---
+
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
