@@ -46,6 +46,12 @@ Directly import these URLs into your preferred IPTV client:
 
 ---
 
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
 ## ☕ Support the Developer
 
 If this project is helpful to you, consider supporting the developer to keep this service maintained and running!
