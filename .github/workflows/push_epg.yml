@@ -2,7 +2,7 @@ name: Push EPG to Railway
 
 on:
   schedule:
-    - cron: '30 17,5 * * *'
+    - cron: '5 22 * * *'
   workflow_dispatch:
 
 jobs:
