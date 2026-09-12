@@ -12,7 +12,7 @@ CHANNELS = {
     },
     "transtv": {
         "name": "Trans TV",
-        "logo": "https://www.transtv.co.id/themes/v25.7/src/assets/logo/transtv-white.png",
+        "logo": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/Logos/General/Trans%20TV.png",
     },
 }
 
