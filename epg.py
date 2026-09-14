@@ -4,7 +4,6 @@ import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import requests
-from playwright.sync_api import sync_playwright
 
 HEADERS = {
     "User-Agent": (
@@ -46,8 +45,9 @@ def get_transtv_schedule():
                         if start_time and clean_title:
                             programs.append({
                                 "start": start_time,
+                                "end": "",
                                 "title": clean_title,
-                                "desc": f"Saksikan {clean_title} di Trans TV.",
+                                "desc": "",
                                 "category": "General",
                             })
     except Exception as e:
@@ -58,49 +58,53 @@ def get_transtv_schedule():
 
 def get_trans7_schedule():
     programs = []
-    url = "https://sevenhub.id/live"
+    base_url = "https://sevenhub.id/live"
 
     try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox", "--disable-setuid-sandbox"],
-            )
-            context = browser.new_context(user_agent=HEADERS["User-Agent"])
-            page = context.new_page()
+        res_main = requests.get(base_url, headers=HEADERS, timeout=15)
+        build_id = None
+        
+        if res_main.status_code == 200:
+            match = re.search(r'"buildId"\s*:\s*"([^"]+)"', res_main.text)
+            if match:
+                build_id = match.group(1)
 
-            page.goto(url, timeout=30000, wait_until="domcontentloaded")
-            page.wait_for_timeout(3000)
+        if not build_id:
+            build_id = "CIO-V18echGfrT93WPcqd"
 
-            page_html = page.content()
-            soup = BeautifulSoup(page_html, "html.parser")
+        url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
+        
+        res = requests.get(url, headers=HEADERS, timeout=15)
+        if res.status_code == 200:
+            data = res.json()
+            
+            schedules = data.get("pageProps", {}).get("schedules", {}).get("data", {})
+            schedule_list = schedules.get("data_schedule", [])
+            
+            if not schedule_list:
+                today_str = datetime.now().strftime("%Y-%m-%d")
+                week_schedules = data.get("pageProps", {}).get("schedules", {}).get("weekSchedules", {}).get("data", [])
+                for day_sched in week_schedules:
+                    if day_sched.get("date_schedule_tv") == today_str:
+                        schedule_list = day_sched.get("data_schedule_tv", [])
+                        break
 
-            items = soup.find_all(
-                "div", class_=re.compile(r"LiveScheduleNew_scheduleItem")
-            ) or soup.find_all("div", class_=re.compile(r"scheduleItem|schedule_item"))
-
-            for item in items:
-                text = item.text.strip()
-                time_match = re.search(
-                    r"(\d{2}:\d{2})\s*-\s*\d{2}:\d{2}|\b(\d{2}:\d{2})\b", text
-                )
-                if time_match:
-                    start_time = time_match.group(1) or time_match.group(2)
-                    raw_title = re.sub(
-                        r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text
-                    ).strip()
-                    clean_title = html.unescape(raw_title).upper()
-                    if start_time and clean_title:
-                        programs.append({
-                            "start": start_time,
-                            "title": clean_title,
-                            "desc": f"Saksikan {clean_title} di Trans 7.",
-                            "category": "General",
-                        })
-
-            browser.close()
+            for item in schedule_list:
+                raw_title = item.get("program", "")
+                start_time = item.get("time_start", "")
+                end_time = item.get("time_end", "")
+                
+                clean_title = html.unescape(raw_title).strip().upper()
+                if start_time and clean_title:
+                    programs.append({
+                        "start": start_time,
+                        "end": end_time,
+                        "title": clean_title,
+                        "desc": "",
+                        "category": "General",
+                    })
     except Exception as e:
-        print(f"[!] Error Trans 7 Playwright EPG: {e}")
+        print(f"[!] Error Trans 7 JSON API: {e}")
 
     return programs
 
@@ -133,15 +137,23 @@ def build_xmltv(transtv_progs, trans7_progs):
                     today.year, today.month, today.day, sh, sm
                 )
 
-                if i < len(progs) - 1:
-                    nh, nm = map(int, progs[i + 1]["start"].split(":"))
+                if p.get("end"):
+                    eh, em = map(int, p["end"].split(":"))
                     end_dt = datetime(
-                        today.year, today.month, today.day, nh, nm
+                        today.year, today.month, today.day, eh, em
                     )
                     if end_dt <= start_dt:
                         end_dt += timedelta(days=1)
                 else:
-                    end_dt = start_dt + timedelta(hours=1, minutes=30)
+                    if i < len(progs) - 1:
+                        nh, nm = map(int, progs[i + 1]["start"].split(":"))
+                        end_dt = datetime(
+                            today.year, today.month, today.day, nh, nm
+                        )
+                        if end_dt <= start_dt:
+                            end_dt += timedelta(days=1)
+                    else:
+                        end_dt = start_dt + timedelta(hours=1, minutes=30)
 
                 prog_elem = ET.SubElement(
                     tv,
