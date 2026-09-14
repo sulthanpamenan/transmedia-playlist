@@ -1,4 +1,3 @@
-import json
 import os
 from urllib.parse import unquote, urljoin
 from flask import Flask, Response, jsonify, request
@@ -22,23 +21,34 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
 )
 
-TOKEN_FILE = "tokens.json"
+JSONBIN_BIN_ID = os.environ.get("JSONBIN_BIN_ID")
+JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY")
+JSONBIN_URL = f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}"
 
 def load_tokens():
-    if os.path.exists(TOKEN_FILE):
-        try:
-            with open(TOKEN_FILE, "r") as f:
-                return json.load(f)
-        except Exception:
-            return {}
+    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY:
+        return {}
+    try:
+        headers = {"X-Master-Key": JSONBIN_API_KEY}
+        res = requests.get(JSONBIN_URL, headers=headers, timeout=10)
+        if res.status_code == 200:
+            data = res.json().get("record", {})
+            return data if isinstance(data, dict) else {}
+    except Exception as e:
+        print(f"[!] Error loading tokens from JSONBin: {e}")
     return {}
 
 def save_tokens(tokens):
+    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY:
+        return
     try:
-        with open(TOKEN_FILE, "w") as f:
-            json.dump(tokens, f)
+        headers = {
+            "Content-Type": "application/json",
+            "X-Master-Key": JSONBIN_API_KEY
+        }
+        requests.put(JSONBIN_URL, headers=headers, json=tokens, timeout=10)
     except Exception as e:
-        print(f"[!] Error saving tokens: {e}")
+        print(f"[!] Error saving tokens to JSONBin: {e}")
 
 STREAM_CACHE = load_tokens()
 
@@ -61,7 +71,7 @@ def update_token():
         "cookies": data.get("cookies", {}),
     }
     save_tokens(STREAM_CACHE)
-    print(f"[✓] Token {data['channel']} successfully updated!")
+    print(f"[✓] Token {data['channel']} successfully updated to JSONBin!")
     return jsonify({"status": "success", "channel": data["channel"]})
 
 
