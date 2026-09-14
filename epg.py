@@ -131,28 +131,32 @@ def get_trans7_multi_day_schedule(days_ahead=2):
 
         url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
         res = scraper.get(url, timeout=15)
-        logging.info(f"Trans 7 API Status: {res.status_code}, Build ID used: {build_id}")
         
         if res.status_code == 200:
             data = res.json()
-            print(json.dumps(data, indent=2))
             schedules_data = data.get("pageProps", {}).get("schedules", {})
             week_schedules = schedules_data.get("weekSchedules", {}).get("data", [])
             
+            if not week_schedules:
+                main_sched = schedules_data.get("data", {})
+                if main_sched:
+                    week_schedules = [main_sched]
+
             today = datetime.now()
             target_dates = [(today + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days_ahead)]
+            logging.info(f"Target Trans 7 Dates: {target_dates}")
 
             for day_sched in week_schedules:
-                date_str = day_sched.get("date_schedule_tv")
+                date_str = day_sched.get("date_schedule_tv") or day_sched.get("date_schedule")
                 if date_str in target_dates:
-                    schedule_list = day_sched.get("data_schedule_tv", [])
+                    schedule_list = day_sched.get("data_schedule_tv") or day_sched.get("data_schedule", [])
                     
                     for item in schedule_list:
                         raw_title = item.get("program", "")
                         start_time = item.get("time_start", "")
                         end_time = item.get("time_end", "")
                         
-                        if not re.match(r"^\d{2}:\d{2}$", start_time):
+                        if not start_time:
                             continue
 
                         clean_title = html.unescape(raw_title).strip().upper()
@@ -170,6 +174,7 @@ def get_trans7_multi_day_schedule(days_ahead=2):
     except Exception as e:
         logging.error(f"Error in Trans 7 Multi-Day EPG: {e}")
 
+    logging.info(f"Total Trans 7 programs collected: {len(all_programs)}")
     return all_programs
 
 
