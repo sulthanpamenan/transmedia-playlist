@@ -21,8 +21,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install playwright requests beautifulsoup4
-          playwright install chromium
+          pip install requests beautifulsoup4 playwright cloudscraper
+          playwright install --with-deps chromium
 
       - name: Run EPG Script
         run: python epg.py
