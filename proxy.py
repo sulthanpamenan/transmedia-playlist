@@ -135,6 +135,9 @@ def stream_proxy(channel):
 
     try:
         res = requests.get(m3u8_url, headers=headers, cookies=cookies, timeout=10)
+        if res.status_code in [401, 403]:
+            return "Token flow is freezing or blocking the CDN. Waiting for the next automatic update...", 503
+        
         if res.status_code != 200:
             return f"Error CDN Detik: {res.status_code}", res.status_code
 
