@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import cloudscraper
 import json
 import html
 import re
@@ -62,52 +63,58 @@ def get_transtv_schedule():
 
 def get_trans7_schedule():
     programs = []
-    url = "https://sevenhub.id/live"
+    scraper = cloudscraper.create_scraper()
+    base_url = "https://sevenhub.id/live"
 
     try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox", "--disable-setuid-sandbox"],
-            )
-            context = browser.new_context(user_agent=HEADERS["User-Agent"])
-            page = context.new_page()
+        res_main = scraper.get(base_url, timeout=15)
+        build_id = None
+        
+        if res_main.status_code == 200:
+            soup = BeautifulSoup(res_main.text, "html.parser")
+            script_tag = soup.find("script", id="__NEXT_DATA__")
+            if script_tag and script_tag.string:
+                try:
+                    next_data = json.loads(script_tag.string)
+                    build_id = next_data.get("buildId")
+                except json.JSONDecodeError:
+                    pass
 
-            page.goto(url, timeout=30000, wait_until="domcontentloaded")
-            page.wait_for_timeout(3000)
+        if not build_id:
+            build_id = "CIO-V18echGfrT93WPcqd"
 
-            page_html = page.content()
-            soup = BeautifulSoup(page_html, "html.parser")
-            browser.close()
+        url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
+        res = scraper.get(url, timeout=15)
+        
+        if res.status_code == 200:
+            data = res.json()
+            schedules = data.get("pageProps", {}).get("schedules", {}).get("data", {})
+            schedule_list = schedules.get("data_schedule", [])
+            
+            if not schedule_list:
+                today_str = datetime.now().strftime("%Y-%m-%d")
+                week_schedules = data.get("pageProps", {}).get("schedules", {}).get("weekSchedules", {}).get("data", [])
+                for day_sched in week_schedules:
+                    if day_sched.get("date_schedule_tv") == today_str:
+                        schedule_list = day_sched.get("data_schedule_tv", [])
+                        break
 
-            items = soup.find_all(
-                "div", class_=re.compile(r"LiveScheduleNew_scheduleItem|scheduleItem")
-            )
-
-            for item in items:
-                text = item.text.strip()
-                time_match = re.search(
-                    r"(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})|\b(\d{2}:\d{2})\b", text
-                )
-                if time_match:
-                    start_time = time_match.group(1) or time_match.group(3)
-                    end_time = time_match.group(2) if time_match.lastindex >= 2 and time_match.group(2) else ""
-                    
-                    raw_title = re.sub(
-                        r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text
-                    ).strip()
-                    clean_title = html.unescape(raw_title).upper()
-                    
-                    if start_time and clean_title:
-                        programs.append({
-                            "start": start_time,
-                            "end": end_time,
-                            "title": clean_title,
-                            "desc": "",
-                            "category": "General",
-                        })
+            for item in schedule_list:
+                raw_title = item.get("program", "")
+                start_time = item.get("time_start", "")
+                end_time = item.get("time_end", "")
+                
+                clean_title = html.unescape(raw_title).strip().upper()
+                if start_time and clean_title:
+                    programs.append({
+                        "start": start_time,
+                        "end": end_time,
+                        "title": clean_title,
+                        "desc": "",
+                        "category": "General",
+                    })
     except Exception as e:
-        print(f"[!] Error Trans 7 Playwright EPG: {e}")
+        print(f"[!] Error Trans 7 Cloudscraper EPG: {e}")
 
     return programs
 
