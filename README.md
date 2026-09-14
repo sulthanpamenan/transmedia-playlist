@@ -41,7 +41,7 @@ Directly import these URLs into your preferred IPTV client:
 2. Add a new playlist source using **URL**:
    https://transmedia-playlist.up.railway.app/playlist.m3u
 3. *(Optional)* If your player does not auto-detect the EPG, add the **EPG / Teleguide URL**:
-   https://transmedia-playlist.up.railway.app/epg.xml
+   https://sulthanpamenan.github.io/transmedia-playlist/epg.xml
 4. Reload the playlist and enjoy your stream!
 
 ---
