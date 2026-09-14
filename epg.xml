@@ -76,17 +76,22 @@
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20260914233100 +0700" stop="20260915004500 +0700" channel="trans7">
-    <title lang="id">FTV: TUAH BOTOL JAMU GENDONG</title>
+  <programme start="20260914233100 +0700" stop="20260915001500 +0700" channel="trans7">
+    <title lang="id">MISTERI DUNIA</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20260914004600 +0700" stop="20260914014500 +0700" channel="trans7">
-    <title lang="id">MOTO2 2026 SAN MARINO GP</title>
+  <programme start="20260914001600 +0700" stop="20260914004500 +0700" channel="trans7">
+    <title lang="id">REDAKSI MALAM</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20260914014600 +0700" stop="20260914023000 +0700" channel="trans7">
+  <programme start="20260914004600 +0700" stop="20260914013000 +0700" channel="trans7">
+    <title lang="id">SPORT 7</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260914013100 +0700" stop="20260914023000 +0700" channel="trans7">
     <title lang="id">BEST FISHING</title>
     <desc lang="id" />
     <category lang="id">General</category>
@@ -102,7 +107,7 @@
     <category lang="id">General</category>
   </programme>
   <programme start="20260914040100 +0700" stop="20260914044500 +0700" channel="trans7">
-    <title lang="id">BIG-BANG!</title>
+    <title lang="id">BIG BANG!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
