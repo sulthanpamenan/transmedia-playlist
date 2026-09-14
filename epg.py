@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import json
 import html
 import re
 import xml.etree.ElementTree as ET
@@ -56,6 +57,8 @@ def get_transtv_schedule():
     return programs
 
 
+import json
+
 def get_trans7_schedule():
     programs = []
     base_url = "https://sevenhub.id/live"
@@ -65,9 +68,14 @@ def get_trans7_schedule():
         build_id = None
         
         if res_main.status_code == 200:
-            match = re.search(r'"buildId"\s*:\s*"([^"]+)"', res_main.text)
-            if match:
-                build_id = match.group(1)
+            soup = BeautifulSoup(res_main.text, "html.parser")
+            script_tag = soup.find("script", id="__NEXT_DATA__")
+            if script_tag and script_tag.string:
+                try:
+                    next_data = json.loads(script_tag.string)
+                    build_id = next_data.get("buildId")
+                except json.JSONDecodeError:
+                    pass
 
         if not build_id:
             build_id = "CIO-V18echGfrT93WPcqd"
@@ -75,6 +83,8 @@ def get_trans7_schedule():
         url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
         
         res = requests.get(url, headers=HEADERS, timeout=15)
+        print(f"Trans 7 API Status: {res.status_code}")
+        
         if res.status_code == 200:
             data = res.json()
             
