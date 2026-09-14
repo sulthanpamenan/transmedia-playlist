@@ -5,7 +5,6 @@ import html
 import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
 import requests
 
 HEADERS = {
@@ -17,6 +16,7 @@ HEADERS = {
     "Referer": "https://sevenhub.id/",
     "X-Nextjs-Data": "1",
 }
+
 
 def get_transtv_schedule():
     programs = []
