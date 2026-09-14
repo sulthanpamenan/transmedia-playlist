@@ -10,9 +10,11 @@ HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
-    )
+    ),
+    "Accept": "*/*",
+    "Referer": "https://sevenhub.id/",
+    "X-Nextjs-Data": "1",
 }
-
 
 def get_transtv_schedule():
     programs = []
