@@ -25,7 +25,7 @@ jobs:
           playwright install chromium
 
       - name: Run EPG Script
-        run: python test.py
+        run: python epg.py
 
       - name: Commit and Push EPG
         run: |
