@@ -135,7 +135,7 @@ def get_trans7_multi_day_schedule(days_ahead=2):
         
         if res.status_code == 200:
             data = res.json()
-            # print(json.dumps(data, indent=2)) # Open this comment if you want to see the original JSON structure in the terminal
+            print(json.dumps(data, indent=2))
             schedules_data = data.get("pageProps", {}).get("schedules", {})
             week_schedules = schedules_data.get("weekSchedules", {}).get("data", [])
             
