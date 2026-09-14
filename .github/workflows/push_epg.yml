@@ -1,4 +1,4 @@
-name: Push EPG to Railway
+name: Push EPG to GitHub
 
 on:
   schedule:
@@ -8,6 +8,8 @@ on:
 jobs:
   update_epg:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,6 +27,10 @@ jobs:
       - name: Run EPG Script
         run: python epg.py
 
-      - name: Push EPG to Railway
+      - name: Commit and Push EPG
         run: |
-          curl -F "file=@epg.xml" https://transmedia-playlist.up.railway.app/update_epg || true
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.io"
+          git add epg.xml
+          git diff --staged --quiet || git commit -m "Auto-update EPG XML [skip ci]"
+          git push
