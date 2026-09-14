@@ -8,212 +8,72 @@
   </channel>
   <programme start="20260914050000 +0700" stop="20260914063000 +0700" channel="transtv">
     <title lang="id">ISLAM ITU INDAH</title>
-    <desc lang="id">Saksikan ISLAM ITU INDAH di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914063000 +0700" stop="20260914073000 +0700" channel="transtv">
     <title lang="id">INSERT PAGI</title>
-    <desc lang="id">Saksikan INSERT PAGI di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914073000 +0700" stop="20260914083000 +0700" channel="transtv">
     <title lang="id">CNN INDONESIA GOOD MORNING</title>
-    <desc lang="id">Saksikan CNN INDONESIA GOOD MORNING di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914083000 +0700" stop="20260914103000 +0700" channel="transtv">
     <title lang="id">PAGI-PAGI AMBYAR</title>
-    <desc lang="id">Saksikan PAGI-PAGI AMBYAR di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914103000 +0700" stop="20260914123000 +0700" channel="transtv">
     <title lang="id">INSERT</title>
-    <desc lang="id">Saksikan INSERT di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914123000 +0700" stop="20260914140000 +0700" channel="transtv">
     <title lang="id">BROWNIS (OBROLAN MANIS)</title>
-    <desc lang="id">Saksikan BROWNIS (OBROLAN MANIS) di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914140000 +0700" stop="20260914150000 +0700" channel="transtv">
     <title lang="id">RUMPI (NO SECRET)</title>
-    <desc lang="id">Saksikan RUMPI (NO SECRET) di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914150000 +0700" stop="20260914160000 +0700" channel="transtv">
     <title lang="id">INSERT TODAY</title>
-    <desc lang="id">Saksikan INSERT TODAY di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914160000 +0700" stop="20260914163000 +0700" channel="transtv">
     <title lang="id">CNN INDONESIA NEWS UPDATE</title>
-    <desc lang="id">Saksikan CNN INDONESIA NEWS UPDATE di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914163000 +0700" stop="20260914173000 +0700" channel="transtv">
     <title lang="id">DREAM BOX INDONESIA</title>
-    <desc lang="id">Saksikan DREAM BOX INDONESIA di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914173000 +0700" stop="20260914184500 +0700" channel="transtv">
     <title lang="id">BIKIN LAPER</title>
-    <desc lang="id">Saksikan BIKIN LAPER di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914184500 +0700" stop="20260914200000 +0700" channel="transtv">
     <title lang="id">INSERT STORY</title>
-    <desc lang="id">Saksikan INSERT STORY di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914200000 +0700" stop="20260914220000 +0700" channel="transtv">
     <title lang="id">BIOSKOP TRANSTV  - GUY RITCHIES THE COVENANT (A.K.A. THE COVENANT)</title>
-    <desc lang="id">Saksikan BIOSKOP TRANSTV  - GUY RITCHIES THE COVENANT (A.K.A. THE COVENANT) di Trans TV.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
   <programme start="20260914220000 +0700" stop="20260914233000 +0700" channel="transtv">
     <title lang="id">BIOSKOP TRANSTV  - DISTRICT 13: ULTIMATUM</title>
-    <desc lang="id">Saksikan BIOSKOP TRANSTV  - DISTRICT 13: ULTIMATUM di Trans TV.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914233100 +0700" stop="20260915004600 +0700" channel="trans7">
-    <title lang="id">FTV: TUAH BOTOL JAMU GENDONG</title>
-    <desc lang="id">Saksikan FTV: TUAH BOTOL JAMU GENDONG di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914004600 +0700" stop="20260914014600 +0700" channel="trans7">
-    <title lang="id">MOTO2 2026 SAN MARINO GP</title>
-    <desc lang="id">Saksikan MOTO2 2026 SAN MARINO GP di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914014600 +0700" stop="20260914023100 +0700" channel="trans7">
-    <title lang="id">BEST FISHING</title>
-    <desc lang="id">Saksikan BEST FISHING di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914023100 +0700" stop="20260914031600 +0700" channel="trans7">
-    <title lang="id">DRACIN</title>
-    <desc lang="id">Saksikan DRACIN di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914031600 +0700" stop="20260914040100 +0700" channel="trans7">
-    <title lang="id">LOL COMEDIHA!</title>
-    <desc lang="id">Saksikan LOL COMEDIHA! di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914040100 +0700" stop="20260914044600 +0700" channel="trans7">
-    <title lang="id">BIG-BANG!</title>
-    <desc lang="id">Saksikan BIG-BANG! di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914044600 +0700" stop="20260914053100 +0700" channel="trans7">
-    <title lang="id">ASSALAMUALAIKUM MAMAH DEDEH</title>
-    <desc lang="id">Saksikan ASSALAMUALAIKUM MAMAH DEDEH di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914053100 +0700" stop="20260914063100 +0700" channel="trans7">
-    <title lang="id">REDAKSI PAGI</title>
-    <desc lang="id">Saksikan REDAKSI PAGI di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914063100 +0700" stop="20260914073100 +0700" channel="trans7">
-    <title lang="id">SPOTLITE</title>
-    <desc lang="id">Saksikan SPOTLITE di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914073100 +0700" stop="20260914083100 +0700" channel="trans7">
-    <title lang="id">SELEBRITA PAGI</title>
-    <desc lang="id">Saksikan SELEBRITA PAGI di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914083100 +0700" stop="20260914093100 +0700" channel="trans7">
-    <title lang="id">FOR YOUR PAGI</title>
-    <desc lang="id">Saksikan FOR YOUR PAGI di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914093100 +0700" stop="20260914101600 +0700" channel="trans7">
-    <title lang="id">SELEBRITA HEITS</title>
-    <desc lang="id">Saksikan SELEBRITA HEITS di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914101600 +0700" stop="20260914111600 +0700" channel="trans7">
-    <title lang="id">BIG-BANG!</title>
-    <desc lang="id">Saksikan BIG-BANG! di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914111600 +0700" stop="20260914120100 +0700" channel="trans7">
-    <title lang="id">ENAH BIKIN ENAK</title>
-    <desc lang="id">Saksikan ENAH BIKIN ENAK di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914120100 +0700" stop="20260914124600 +0700" channel="trans7">
-    <title lang="id">JEJAK SI GUNDUL</title>
-    <desc lang="id">Saksikan JEJAK SI GUNDUL di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914124600 +0700" stop="20260914133100 +0700" channel="trans7">
-    <title lang="id">BOCAH PETUALANG</title>
-    <desc lang="id">Saksikan BOCAH PETUALANG di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914133100 +0700" stop="20260914141600 +0700" channel="trans7">
-    <title lang="id">INDONESIAKU</title>
-    <desc lang="id">Saksikan INDONESIAKU di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914141600 +0700" stop="20260914150100 +0700" channel="trans7">
-    <title lang="id">REDAKSI</title>
-    <desc lang="id">Saksikan REDAKSI di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914150100 +0700" stop="20260914160100 +0700" channel="trans7">
-    <title lang="id">BIKIN SENENG</title>
-    <desc lang="id">Saksikan BIKIN SENENG di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914160100 +0700" stop="20260914170100 +0700" channel="trans7">
-    <title lang="id">MAKAN RECEH</title>
-    <desc lang="id">Saksikan MAKAN RECEH di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914170100 +0700" stop="20260914180100 +0700" channel="trans7">
-    <title lang="id">SELEBRITA UPDATE</title>
-    <desc lang="id">Saksikan SELEBRITA UPDATE di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914180100 +0700" stop="20260914184600 +0700" channel="trans7">
-    <title lang="id">ON THE SPOT</title>
-    <desc lang="id">Saksikan ON THE SPOT di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914184600 +0700" stop="20260914191600 +0700" channel="trans7">
-    <title lang="id">SECRET STORY</title>
-    <desc lang="id">Saksikan SECRET STORY di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914191600 +0700" stop="20260914200100 +0700" channel="trans7">
-    <title lang="id">POV (PASTI OBROLAN VIRAL)</title>
-    <desc lang="id">Saksikan POV (PASTI OBROLAN VIRAL) di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914200100 +0700" stop="20260914213100 +0700" channel="trans7">
-    <title lang="id">ARISAN</title>
-    <desc lang="id">Saksikan ARISAN di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914213100 +0700" stop="20260914224600 +0700" channel="trans7">
-    <title lang="id">LAPOR PAK!</title>
-    <desc lang="id">Saksikan LAPOR PAK! di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914224600 +0700" stop="20260914233100 +0700" channel="trans7">
-    <title lang="id">THE POLICE</title>
-    <desc lang="id">Saksikan THE POLICE di Trans 7.</desc>
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20260914233100 +0700" stop="20260915010100 +0700" channel="trans7">
-    <title lang="id">MISTERI DUNIA</title>
-    <desc lang="id">Saksikan MISTERI DUNIA di Trans 7.</desc>
+    <desc lang="id" />
     <category lang="id">General</category>
   </programme>
 </tv>
