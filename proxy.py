@@ -1,3 +1,4 @@
+import json
 import os
 from urllib.parse import unquote, urljoin
 from flask import Flask, Response, jsonify, request
@@ -21,7 +22,25 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
 )
 
-STREAM_CACHE = {}
+TOKEN_FILE = "tokens.json"
+
+def load_tokens():
+    if os.path.exists(TOKEN_FILE):
+        try:
+            with open(TOKEN_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def save_tokens(tokens):
+    try:
+        with open(TOKEN_FILE, "w") as f:
+            json.dump(tokens, f)
+    except Exception as e:
+        print(f"[!] Error saving tokens: {e}")
+
+STREAM_CACHE = load_tokens()
 
 
 @app.route("/")
@@ -35,10 +54,13 @@ def update_token():
     if not data or "channel" not in data or "url" not in data:
         return jsonify({"error": "invalid payload"}), 400
 
+    global STREAM_CACHE
+    STREAM_CACHE = load_tokens()
     STREAM_CACHE[data["channel"]] = {
         "url": data["url"],
         "cookies": data.get("cookies", {}),
     }
+    save_tokens(STREAM_CACHE)
     print(f"[✓] Token {data['channel']} successfully updated!")
     return jsonify({"status": "success", "channel": data["channel"]})
 
