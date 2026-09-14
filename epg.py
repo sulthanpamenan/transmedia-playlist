@@ -4,6 +4,7 @@ import html
 import re
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 import requests
 
 HEADERS = {
@@ -59,48 +60,54 @@ def get_transtv_schedule():
     return programs
 
 
-import json
-
 def get_trans7_schedule():
     programs = []
-    build_id = "CIO-V18echGfrT93WPcqd"
-    url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
+    url = "https://sevenhub.id/live"
 
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
-        
-        if res.status_code == 200:
-            data = res.json()
-            
-            schedules = data.get("pageProps", {}).get("schedules", {}).get("data", {})
-            schedule_list = schedules.get("data_schedule", [])
-            
-            if not schedule_list:
-                today_str = datetime.now().strftime("%Y-%m-%d")
-                week_schedules = data.get("pageProps", {}).get("schedules", {}).get("weekSchedules", {}).get("data", [])
-                for day_sched in week_schedules:
-                    if day_sched.get("date_schedule_tv") == today_str:
-                        schedule_list = day_sched.get("data_schedule_tv", [])
-                        break
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox"],
+            )
+            context = browser.new_context(user_agent=HEADERS["User-Agent"])
+            page = context.new_page()
 
-            for item in schedule_list:
-                raw_title = item.get("program", "")
-                start_time = item.get("time_start", "")
-                end_time = item.get("time_end", "")
-                
-                clean_title = html.unescape(raw_title).strip().upper()
-                if start_time and clean_title:
-                    programs.append({
-                        "start": start_time,
-                        "end": end_time,
-                        "title": clean_title,
-                        "desc": "",
-                        "category": "General",
-                    })
-        else:
-            print(f"[!] Trans 7 API Error Status: {res.status_code}")
+            page.goto(url, timeout=30000, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
+
+            page_html = page.content()
+            soup = BeautifulSoup(page_html, "html.parser")
+            browser.close()
+
+            items = soup.find_all(
+                "div", class_=re.compile(r"LiveScheduleNew_scheduleItem|scheduleItem")
+            )
+
+            for item in items:
+                text = item.text.strip()
+                time_match = re.search(
+                    r"(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})|\b(\d{2}:\d{2})\b", text
+                )
+                if time_match:
+                    start_time = time_match.group(1) or time_match.group(3)
+                    end_time = time_match.group(2) if time_match.lastindex >= 2 and time_match.group(2) else ""
+                    
+                    raw_title = re.sub(
+                        r"\d{2}:\d{2}\s*-\s*\d{2}:\d{2}|\d{2}:\d{2}", "", text
+                    ).strip()
+                    clean_title = html.unescape(raw_title).upper()
+                    
+                    if start_time and clean_title:
+                        programs.append({
+                            "start": start_time,
+                            "end": end_time,
+                            "title": clean_title,
+                            "desc": "",
+                            "category": "General",
+                        })
     except Exception as e:
-        print(f"[!] Error Trans 7 JSON API: {e}")
+        print(f"[!] Error Trans 7 Playwright EPG: {e}")
 
     return programs
 
