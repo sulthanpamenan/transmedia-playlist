@@ -71,30 +71,26 @@ def save_tokens(tokens):
     if not GIST_ID or not GITHUB_TOKEN:
         print("[!] GIST_ID or GITHUB_TOKEN is missing when trying to save!")
         return
-    try:
-        import json
-        headers = {
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "files": {
-                GIST_FILENAME: {
-                    "content": json.dumps(tokens, indent=4)
-                }
+    
+    import json
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "files": {
+            GIST_FILENAME: {
+                "content": json.dumps(tokens, indent=4)
             }
         }
-        res = requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
-        if res.status_code == 200:
-            print("[✓] Gist successfully patched via API!")
-        else:
-            print(f"[!] Failed to save Gist. Status Code: {res.status_code}, Response: {res.text}")
-        
-        global _token_cache
-        _token_cache["expires_at"] = 0
-    except Exception as e:
-        print(f"[!] Error saving tokens to GitHub Gist: {e}")
+    }
+    res = requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+    print(f"[DEBUG] GitHub Gist Response Code: {res.status_code}, Body: {res.text}")
+    res.raise_for_status()
+    
+    global _token_cache
+    _token_cache["expires_at"] = 0
 
 
 @app.route("/")
@@ -113,9 +109,13 @@ def update_token():
         "url": data["url"],
         "cookies": data.get("cookies", {}),
     }
-    save_tokens(current_tokens)
-    print(f"[✓] Token {data['channel']} successfully updated to GitHub Gist!")
-    return jsonify({"status": "success", "channel": data["channel"]})
+    try:
+        save_tokens(current_tokens)
+        print(f"[✓] Token {data['channel']} successfully updated to GitHub Gist!")
+        return jsonify({"status": "success", "channel": data["channel"]})
+    except Exception as e:
+        print(f"[!] Critical Error in update_token: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @app.route("/update_epg", methods=["POST"])
