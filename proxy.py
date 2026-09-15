@@ -21,40 +21,57 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
 )
 
-JSONBIN_BIN_ID = os.environ.get("JSONBIN_BIN_ID")
-JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY")
-JSONBIN_URL = f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}"
+GIST_ID = os.environ.get("GIST_ID")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GIST_FILENAME = os.environ.get("GIST_FILENAME", "transmedia.json")
+GIST_API_URL = f"https://api.github.com/gists/{GIST_ID}"
 
 def load_tokens():
-    """Always fetches the latest token directly from JSONBin in real-time"""
-    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY:
+    raw_url = os.environ.get("GIST_RAW_URL")
+    if not GIST_ID or not GITHUB_TOKEN:
         return {}
     try:
-        headers = {"X-Master-Key": JSONBIN_API_KEY}
-        res = requests.get(JSONBIN_URL, headers=headers, timeout=10)
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        res = requests.get(GIST_API_URL, headers=headers, timeout=10)
         if res.status_code == 200:
-            data = res.json().get("record", {})
+            files = res.json().get("files", {})
+            file_data = files.get(GIST_FILENAME, {})
+            content = file_data.get("content", "{}")
+            import json
+            data = json.loads(content)
             return data if isinstance(data, dict) else {}
     except Exception as e:
-        print(f"[!] Error loading tokens from JSONBin: {e}")
+        print(f"[!] Error loading tokens from GitHub Gist: {e}")
     return {}
 
 def save_tokens(tokens):
-    if not JSONBIN_BIN_ID or not JSONBIN_API_KEY:
+    if not GIST_ID or not GITHUB_TOKEN:
         return
     try:
+        import json
         headers = {
-            "Content-Type": "application/json",
-            "X-Master-Key": JSONBIN_API_KEY
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
         }
-        requests.put(JSONBIN_URL, headers=headers, json=tokens, timeout=10)
+        payload = {
+            "files": {
+                GIST_FILENAME: {
+                    "content": json.dumps(tokens, indent=4)
+                }
+            }
+        }
+        requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
     except Exception as e:
-        print(f"[!] Error saving tokens to JSONBin: {e}")
+        print(f"[!] Error saving tokens to GitHub Gist: {e}")
 
 
 @app.route("/")
 def index():
-    return "Proxy Transmedia Active! Access playlist via /playlist.m3u"
+    return "Proxy Transmedia Active (GitHub Gist Mode)! Access playlist via /playlist.m3u"
 
 
 @app.route("/update_token", methods=["POST"])
@@ -69,7 +86,7 @@ def update_token():
         "cookies": data.get("cookies", {}),
     }
     save_tokens(current_tokens)
-    print(f"[✓] Token {data['channel']} successfully updated to JSONBin!")
+    print(f"[✓] Token {data['channel']} successfully updated to GitHub Gist!")
     return jsonify({"status": "success", "channel": data["channel"]})
 
 
