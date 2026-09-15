@@ -26,6 +26,7 @@ JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY")
 JSONBIN_URL = f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}"
 
 def load_tokens():
+    """Always fetches the latest token directly from JSONBin in real-time"""
     if not JSONBIN_BIN_ID or not JSONBIN_API_KEY:
         return {}
     try:
@@ -50,8 +51,6 @@ def save_tokens(tokens):
     except Exception as e:
         print(f"[!] Error saving tokens to JSONBin: {e}")
 
-STREAM_CACHE = load_tokens()
-
 
 @app.route("/")
 def index():
@@ -64,13 +63,12 @@ def update_token():
     if not data or "channel" not in data or "url" not in data:
         return jsonify({"error": "invalid payload"}), 400
 
-    global STREAM_CACHE
-    STREAM_CACHE = load_tokens()
-    STREAM_CACHE[data["channel"]] = {
+    current_tokens = load_tokens()
+    current_tokens[data["channel"]] = {
         "url": data["url"],
         "cookies": data.get("cookies", {}),
     }
-    save_tokens(STREAM_CACHE)
+    save_tokens(current_tokens)
     print(f"[✓] Token {data['channel']} successfully updated to JSONBin!")
     return jsonify({"status": "success", "channel": data["channel"]})
 
@@ -131,7 +129,9 @@ def stream_proxy(channel):
     if channel not in CHANNELS:
         return "Channel not found", 404
 
-    cached_data = STREAM_CACHE.get(channel)
+    stream_cache = load_tokens()
+    cached_data = stream_cache.get(channel)
+    
     if not cached_data or not cached_data.get("url"):
         return "Waiting for token. Please try again...", 503
 
@@ -185,8 +185,11 @@ def ts_proxy():
         return "Invalid segment URL", 400
 
     target_url = unquote(segment_url)
-    cached_data = STREAM_CACHE.get(channel, {})
+    
+    stream_cache = load_tokens()
+    cached_data = stream_cache.get(channel, {})
     cookies = cached_data.get("cookies", {})
+    
     headers = {
         "User-Agent": USER_AGENT,
         "Referer": "https://20.detik.com/",
