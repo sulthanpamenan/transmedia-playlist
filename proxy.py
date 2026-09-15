@@ -40,11 +40,12 @@ def load_tokens():
         return _token_cache["data"]
 
     if not GIST_ID or not GITHUB_TOKEN:
+        print("[!] GIST_ID or GITHUB_TOKEN is missing in environment variables!")
         return {}
         
     try:
         headers = {
-            "Authorization": f"token {GITHUB_TOKEN}",
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github.v3+json"
         }
         res = requests.get(GIST_API_URL, headers=headers, timeout=10)
@@ -59,6 +60,8 @@ def load_tokens():
             _token_cache["expires_at"] = time.time() + 900
             
             return _token_cache["data"]
+        else:
+            print(f"[!] Failed to load Gist. Status Code: {res.status_code}, Response: {res.text}")
     except Exception as e:
         print(f"[!] Error loading tokens from GitHub Gist: {e}")
         
@@ -66,11 +69,12 @@ def load_tokens():
 
 def save_tokens(tokens):
     if not GIST_ID or not GITHUB_TOKEN:
+        print("[!] GIST_ID or GITHUB_TOKEN is missing when trying to save!")
         return
     try:
         import json
         headers = {
-            "Authorization": f"token {GITHUB_TOKEN}",
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github.v3+json",
             "Content-Type": "application/json"
         }
@@ -81,7 +85,11 @@ def save_tokens(tokens):
                 }
             }
         }
-        requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+        res = requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+        if res.status_code == 200:
+            print("[✓] Gist successfully patched via API!")
+        else:
+            print(f"[!] Failed to save Gist. Status Code: {res.status_code}, Response: {res.text}")
         
         global _token_cache
         _token_cache["expires_at"] = 0
