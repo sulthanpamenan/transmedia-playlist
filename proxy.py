@@ -2,6 +2,7 @@ import os
 from urllib.parse import unquote, urljoin
 from flask import Flask, Response, jsonify, request
 import requests
+import time
 
 app = Flask(__name__)
 
@@ -26,10 +27,21 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GIST_FILENAME = os.environ.get("GIST_FILENAME", "transmedia.json")
 GIST_API_URL = f"https://api.github.com/gists/{GIST_ID}"
 
+_token_cache = {
+    "data": {},
+    "expires_at": 0
+}
+
 def load_tokens():
-    raw_url = os.environ.get("GIST_RAW_URL")
+    global _token_cache
+    current_time = time.time()
+    
+    if _token_cache["data"] and current_time < _token_cache["expires_at"]:
+        return _token_cache["data"]
+
     if not GIST_ID or not GITHUB_TOKEN:
         return {}
+        
     try:
         headers = {
             "Authorization": f"token {GITHUB_TOKEN}",
@@ -42,10 +54,15 @@ def load_tokens():
             content = file_data.get("content", "{}")
             import json
             data = json.loads(content)
-            return data if isinstance(data, dict) else {}
+            
+            _token_cache["data"] = data if isinstance(data, dict) else {}
+            _token_cache["expires_at"] = time.time() + 900
+            
+            return _token_cache["data"]
     except Exception as e:
         print(f"[!] Error loading tokens from GitHub Gist: {e}")
-    return {}
+        
+    return _token_cache["data"]
 
 def save_tokens(tokens):
     if not GIST_ID or not GITHUB_TOKEN:
@@ -65,6 +82,9 @@ def save_tokens(tokens):
             }
         }
         requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+        
+        global _token_cache
+        _token_cache["expires_at"] = 0
     except Exception as e:
         print(f"[!] Error saving tokens to GitHub Gist: {e}")
 
