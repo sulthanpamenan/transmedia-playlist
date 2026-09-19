@@ -61,9 +61,51 @@ def load_tokens():
         
     return _token_cache["data"]
 
+def save_tokens(tokens):
+    if not GIST_ID or not GITHUB_TOKEN:
+        print("[!] GIST_ID or GITHUB_TOKEN is missing when trying to save!")
+        return
+    
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "files": {
+            GIST_FILENAME: {
+                "content": json.dumps(tokens, indent=4)
+            }
+        }
+    }
+    res = requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+    res.raise_for_status()
+    
+    global _token_cache
+    _token_cache["expires_at"] = 0
+
 @app.route("/")
 def index():
     return "Proxy Transmedia Serverless (GitHub Gist Mode) Active!"
+
+@app.route("/update_token", methods=["POST"])
+def update_token():
+    data = request.json
+    if not data or "channel" not in data or "url" not in data:
+        return jsonify({"error": "invalid payload"}), 400
+
+    current_tokens = load_tokens()
+    current_tokens[data["channel"]] = {
+        "url": data["url"],
+        "cookies": data.get("cookies", {}),
+    }
+    try:
+        save_tokens(current_tokens)
+        print(f"[✓] Token {data['channel']} successfully updated to GitHub Gist!")
+        return jsonify({"status": "success", "channel": data["channel"]})
+    except Exception as e:
+        print(f"[!] Critical Error in update_token: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/playlist.m3u")
 def get_master_playlist():
