@@ -2,7 +2,7 @@ import time
 import requests
 from playwright.sync_api import sync_playwright
 
-RAILWAY_URL = "https://transmedia-playlist.up.railway.app/update_token"
+RAILWAY_URL = "https://transmedia-playlist.onrender.com/update_token"
 
 CHANNELS = {
     "trans7": "https://20.detik.com/live/trans-7",
