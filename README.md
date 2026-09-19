@@ -10,7 +10,7 @@ Directly import these URLs into your preferred IPTV client:
 
 | Resource | URL |
 | :--- | :--- |
-| **Playlist (M3U)** | https://transmedia-playlist.up.railway.app/playlist.m3u |
+| **Playlist (M3U)** | https://transmedia-playlist.onrender.com/playlist.m3u |
 | **EPG / Guide (XMLTV)** | https://sulthanpamenan.github.io/transmedia-playlist/epg.xml |
 
 > **Note:** The playlist includes the `url-tvg` tag, allowing modern IPTV players to auto-discover and load the EPG guide automatically upon playlist import.
@@ -39,7 +39,7 @@ Directly import these URLs into your preferred IPTV client:
 
 1. Open your IPTV Player (e.g., **OTT Navigator**).
 2. Add a new playlist source using **URL**:
-   https://transmedia-playlist.up.railway.app/playlist.m3u
+   https://transmedia-playlist.onrender.com/playlist.m3u
 3. *(Optional)* If your player does not auto-detect the EPG, add the **EPG / Teleguide URL**:
    https://sulthanpamenan.github.io/transmedia-playlist/epg.xml
 4. Reload the playlist and enjoy your stream!
