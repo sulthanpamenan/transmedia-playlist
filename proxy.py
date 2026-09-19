@@ -52,7 +52,6 @@ def load_tokens():
             files = res.json().get("files", {})
             file_data = files.get(GIST_FILENAME, {})
             content = file_data.get("content", "{}")
-            import json
             data = json.loads(content)
             
             _token_cache["data"] = data if isinstance(data, dict) else {}
@@ -123,7 +122,7 @@ def update_epg():
 
     file = request.files["file"]
     file.save("epg.xml")
-    print("[✓] epg.xml was successfully received and updated on Railway!")
+    print("[✓] epg.xml was successfully received and updated on Render!")
     return jsonify({"status": "success"})
 
 
@@ -201,17 +200,11 @@ def stream_proxy(channel):
             if line.startswith("#") or not line.strip():
                 new_lines.append(line)
             else:
-                full_url = (
-                    line if line.startswith("http") else urljoin(base_url, line)
-                )
+                full_url = line if line.startswith("http") else urljoin(base_url, line)
                 encoded_url = requests.utils.quote(full_url)
-                new_lines.append(
-                    f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
-                )
+                new_lines.append(f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}")
 
-        return Response(
-            "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
-        )
+        return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
     except Exception as e:
         return f"Stream Proxy Error: {e}", 500
 
@@ -250,27 +243,17 @@ def ts_proxy():
                 if line.startswith("#") or not line.strip():
                     new_lines.append(line)
                 else:
-                    full_url = (
-                        line if line.startswith("http") else urljoin(base_url, line)
-                    )
+                    full_url = line if line.startswith("http") else urljoin(base_url, line)
                     encoded_url = requests.utils.quote(full_url)
-                    new_lines.append(
-                        f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}"
-                    )
+                    new_lines.append(f"{scheme}://{request.host}/ts_proxy?channel={channel}&url={encoded_url}")
 
-            return Response(
-                "\n".join(new_lines), content_type="application/vnd.apple.mpegurl"
-            )
+            return Response("\n".join(new_lines), content_type="application/vnd.apple.mpegurl")
         except Exception as e:
             return f"Manifest Error: {e}", 500
 
     try:
-        res = requests.get(
-            target_url, headers=headers, cookies=cookies, stream=True, timeout=15
-        )
-        return Response(
-            res.iter_content(chunk_size=32768), content_type="video/MP2T"
-        )
+        res = requests.get(target_url, headers=headers, cookies=cookies, stream=True, timeout=15)
+        return Response(res.iter_content(chunk_size=32768), content_type="video/MP2T")
     except Exception as e:
         return f"Segment Error: {e}", 500
 
