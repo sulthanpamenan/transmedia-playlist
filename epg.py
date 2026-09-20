@@ -16,10 +16,7 @@ logging.basicConfig(
 )
 
 HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
-    ),
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "*/*",
     "Referer": "https://sevenhub.id/",
     "X-Nextjs-Data": "1",
@@ -32,13 +29,8 @@ def get_transtv_schedule(date_str=None, session=None):
 
     url = "https://www.transtv.co.id/schedule"
     headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,"
-            " like Gecko) Chrome/152.0.0.0 Safari/537.36"
-        ),
-        "Accept": (
-            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
-        ),
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
         "Referer": "https://www.transtv.co.id/",
     }
 
@@ -111,47 +103,82 @@ def get_trans7_multi_day_schedule(days_ahead=2):
     all_programs = []
     scraper = cloudscraper.create_scraper()
     base_url = "https://sevenhub.id/live"
+    build_id = None
 
     try:
+        logging.info("Fetching Trans 7 main page to extract buildId...")
         res_main = scraper.get(base_url, timeout=15)
-        build_id = None
         
         if res_main.status_code == 200:
             soup = BeautifulSoup(res_main.text, "html.parser")
             script_tag = soup.find("script", id="__NEXT_DATA__")
+            
+            # 1. Try extracting the buildId from the __NEXT_DATA__ JSON tag
             if script_tag and script_tag.string:
                 try:
                     next_data = json.loads(script_tag.string)
                     build_id = next_data.get("buildId")
+                    logging.info(f"Successfully extracted buildId from __NEXT_DATA__: {build_id}")
                 except json.JSONDecodeError as jde:
-                    logging.warning(f"Failed to parse __NEXT_DATA__ JSON for Trans 7: {jde}")
+                    logging.warning(f"JSONDecodeError while parsing __NEXT_DATA__ for Trans 7: {jde}")
+            
+            # 2. Fallback: Use Regex to find the buildId if JSON parsing fails or the structure changes
+            if not build_id:
+                logging.info("Attempting regex fallback to find buildId in HTML...")
+                match = re.search(r'"buildId"\s*:\s*"([^"]+)"', res_main.text)
+                if match:
+                    build_id = match.group(1)
+                    logging.info(f"Successfully extracted buildId via regex fallback: {build_id}")
+        else:
+            logging.warning(f"Failed to access {base_url}, status code: {res_main.status_code}")
 
+        # 3. The final fallback if all the methods above fail (Static Fallback)
         if not build_id:
             build_id = "CIO-V18echGfrT93WPcqd"
+            logging.warning(f"Using hardcoded fallback buildId: {build_id}")
 
         url = f"https://sevenhub.id/_next/data/{build_id}/live.json"
+        logging.info(f"Requesting Trans 7 JSON data from: {url}")
         res = scraper.get(url, timeout=15)
         
         if res.status_code == 200:
-            data = res.json()
-            schedules_data = data.get("pageProps", {}).get("schedules", {})
-            week_schedules = schedules_data.get("weekSchedules", {}).get("data", [])
-            
-            if not week_schedules:
-                main_sched = schedules_data.get("data", {})
-                if main_sched:
-                    week_schedules = [main_sched]
+            try:
+                data = res.json()
+            except json.JSONDecodeError as jde:
+                logging.error(f"Failed to decode JSON response from Trans 7 Next.js endpoint: {jde}")
+                return all_programs
+
+            try:
+                schedules_data = data.get("pageProps", {}).get("schedules", {})
+                week_schedules = schedules_data.get("weekSchedules", {}).get("data", [])
+                
+                if not week_schedules:
+                    main_sched = schedules_data.get("data", {})
+                    if main_sched:
+                        week_schedules = [main_sched]
+            except AttributeError as ae:
+                logging.error(f"Unexpected data structure in Trans 7 JSON response: {ae}")
+                return all_programs
 
             today = datetime.now()
             target_dates = [(today + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days_ahead)]
             logging.info(f"Target Trans 7 Dates: {target_dates}")
 
             for day_sched in week_schedules:
+                if not isinstance(day_sched, dict):
+                    continue
+                
                 date_str = day_sched.get("date_schedule_tv") or day_sched.get("date_schedule")
                 if date_str in target_dates:
                     schedule_list = day_sched.get("data_schedule_tv") or day_sched.get("data_schedule", [])
                     
+                    if not isinstance(schedule_list, list):
+                        continue
+
                     for item in schedule_list:
+                        if not isinstance(item, dict):
+                            continue
+                        
                         raw_title = item.get("program", "")
                         start_time = item.get("time_start", "")
                         end_time = item.get("time_end", "")
@@ -171,8 +198,11 @@ def get_trans7_multi_day_schedule(days_ahead=2):
                             })
         else:
             logging.warning(f"Failed to retrieve Trans 7 API, status code: {res.status_code}")
+            
+    except requests.RequestException as req_err:
+        logging.error(f"Network error while fetching Trans 7 schedule: {req_err}")
     except Exception as e:
-        logging.error(f"Error in Trans 7 Multi-Day EPG: {e}")
+        logging.error(f"Unexpected error in Trans 7 Multi-Day EPG: {e}", exc_info=True)
 
     logging.info(f"Total Trans 7 programs collected: {len(all_programs)}")
     return all_programs
@@ -233,24 +263,17 @@ def build_xmltv(transtv_progs, trans7_progs):
                 desc_elem = ET.SubElement(prog_elem, "desc", {"lang": "id"})
                 desc_elem.text = p.get("desc", "")
 
-                category_elem = ET.SubElement(
-                    prog_elem, "category", {"lang": "id"}
-                )
+                category_elem = ET.SubElement(prog_elem, "category", {"lang": "id"})
                 category_elem.text = p.get("category", "General")
 
             except Exception as e:
-                logging.warning(
-                    f"Failed to process program '{p.get('title', 'UNKNOWN')}' "
-                    f"on channel {ch_id} (Date: {prog_date_str}): {e}"
-                )
+                logging.warning(f"Failed to process program '{p.get('title', 'UNKNOWN')}' on channel {ch_id} (Date: {prog_date_str}): {e}")
                 continue
 
     tree = ET.ElementTree(tv)
     ET.indent(tree, space="  ")
     tree.write("epg.xml", encoding="utf-8", xml_declaration=True)
-    logging.info(
-        f"epg.xml successfully created! (Trans TV: {len(transtv_progs)} programs, Trans 7: {len(trans7_progs)} programs)"
-    )
+    logging.info(f"epg.xml successfully created! (Trans TV: {len(transtv_progs)} programs, Trans 7: {len(trans7_progs)} programs)")
 
 
 if __name__ == "__main__":
