@@ -86,6 +86,76 @@
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
+  <programme start="20260921050000 +0700" stop="20260921063000 +0700" channel="transtv">
+    <title lang="id">ISLAM ITU INDAH</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921063000 +0700" stop="20260921073000 +0700" channel="transtv">
+    <title lang="id">INSERT PAGI</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921073000 +0700" stop="20260921083000 +0700" channel="transtv">
+    <title lang="id">CNN INDONESIA GOOD MORNING</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921083000 +0700" stop="20260921103000 +0700" channel="transtv">
+    <title lang="id">PAGI-PAGI AMBYAR</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921103000 +0700" stop="20260921123000 +0700" channel="transtv">
+    <title lang="id">INSERT</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921123000 +0700" stop="20260921140000 +0700" channel="transtv">
+    <title lang="id">BROWNIS (OBROLAN MANIS)</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921140000 +0700" stop="20260921150000 +0700" channel="transtv">
+    <title lang="id">RUMPI (NO SECRET)</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921150000 +0700" stop="20260921160000 +0700" channel="transtv">
+    <title lang="id">INSERT TODAY</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921160000 +0700" stop="20260921163000 +0700" channel="transtv">
+    <title lang="id">CNN INDONESIA NEWS UPDATE</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921163000 +0700" stop="20260921173000 +0700" channel="transtv">
+    <title lang="id">DREAM BOX INDONESIA</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921173000 +0700" stop="20260921184500 +0700" channel="transtv">
+    <title lang="id">BIKIN LAPER</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921184500 +0700" stop="20260921200000 +0700" channel="transtv">
+    <title lang="id">INSERT STORY</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921200000 +0700" stop="20260921220000 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - GREENLAND</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20260921220000 +0700" stop="20260921233000 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - CRANK 2: HIGH VOLTAGE</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
   <programme start="20260920233100 +0700" stop="20260921004500 +0700" channel="trans7">
     <title lang="id">FTV: SURAT PETAKA</title>
     <desc lang="id" />
