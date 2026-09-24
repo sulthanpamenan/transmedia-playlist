@@ -1,8 +1,8 @@
 name: Push Tokens to Render
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+  repository_dispatch:
+    types: [run-token]
   workflow_dispatch:
 
 jobs:
