@@ -6,222 +6,222 @@
   <channel id="trans7">
     <display-name>Trans 7</display-name>
   </channel>
-  <programme start="20261007050000 +0700" stop="20261007063000 +0700" channel="transtv">
+  <programme start="20261008050000 +0700" stop="20261008063000 +0700" channel="transtv">
     <title lang="id">ISLAM ITU INDAH</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007063000 +0700" stop="20261007073000 +0700" channel="transtv">
+  <programme start="20261008063000 +0700" stop="20261008073000 +0700" channel="transtv">
     <title lang="id">INSERT PAGI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007073000 +0700" stop="20261007083000 +0700" channel="transtv">
+  <programme start="20261008073000 +0700" stop="20261008083000 +0700" channel="transtv">
     <title lang="id">CNN INDONESIA GOOD MORNING</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007083000 +0700" stop="20261007103000 +0700" channel="transtv">
+  <programme start="20261008083000 +0700" stop="20261008103000 +0700" channel="transtv">
     <title lang="id">PAGI-PAGI AMBYAR</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007103000 +0700" stop="20261007123000 +0700" channel="transtv">
+  <programme start="20261008103000 +0700" stop="20261008123000 +0700" channel="transtv">
     <title lang="id">INSERT</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007123000 +0700" stop="20261007140000 +0700" channel="transtv">
+  <programme start="20261008123000 +0700" stop="20261008140000 +0700" channel="transtv">
     <title lang="id">BROWNIS (OBROLAN MANIS)</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007140000 +0700" stop="20261007150000 +0700" channel="transtv">
+  <programme start="20261008140000 +0700" stop="20261008150000 +0700" channel="transtv">
     <title lang="id">RUMPI (NO SECRET)</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007150000 +0700" stop="20261007160000 +0700" channel="transtv">
+  <programme start="20261008150000 +0700" stop="20261008160000 +0700" channel="transtv">
     <title lang="id">INSERT TODAY</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007160000 +0700" stop="20261007163000 +0700" channel="transtv">
+  <programme start="20261008160000 +0700" stop="20261008163000 +0700" channel="transtv">
     <title lang="id">CNN INDONESIA NEWS UPDATE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007163000 +0700" stop="20261007173000 +0700" channel="transtv">
+  <programme start="20261008163000 +0700" stop="20261008173000 +0700" channel="transtv">
     <title lang="id">DREAM BOX INDONESIA</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007173000 +0700" stop="20261007184500 +0700" channel="transtv">
+  <programme start="20261008173000 +0700" stop="20261008184500 +0700" channel="transtv">
     <title lang="id">BIKIN LAPER</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007184500 +0700" stop="20261007200000 +0700" channel="transtv">
+  <programme start="20261008184500 +0700" stop="20261008200000 +0700" channel="transtv">
     <title lang="id">INSERT STORY</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007200000 +0700" stop="20261007220000 +0700" channel="transtv">
-    <title lang="id">BIOSKOP TRANSTV  - THE BRICKLAYER</title>
+  <programme start="20261008200000 +0700" stop="20261008220000 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - LAND OF BAD</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007220000 +0700" stop="20261007233000 +0700" channel="transtv">
-    <title lang="id">BIOSKOP TRANSTV  - BEYOND THE LAW</title>
+  <programme start="20261008220000 +0700" stop="20261008233000 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - UNHINGED</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007233100 +0700" stop="20261008001500 +0700" channel="trans7">
+  <programme start="20261008233100 +0700" stop="20261009001500 +0700" channel="trans7">
     <title lang="id">MISTERI DUNIA</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007001600 +0700" stop="20261007004500 +0700" channel="trans7">
+  <programme start="20261008001600 +0700" stop="20261008004500 +0700" channel="trans7">
     <title lang="id">REDAKSI MALAM</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007004600 +0700" stop="20261007013000 +0700" channel="trans7">
+  <programme start="20261008004600 +0700" stop="20261008013000 +0700" channel="trans7">
     <title lang="id">SPORT 7</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007013100 +0700" stop="20261007023000 +0700" channel="trans7">
+  <programme start="20261008013100 +0700" stop="20261008023000 +0700" channel="trans7">
     <title lang="id">BEST FISHING</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007023100 +0700" stop="20261007031500 +0700" channel="trans7">
+  <programme start="20261008023100 +0700" stop="20261008031500 +0700" channel="trans7">
     <title lang="id">DRACIN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007031600 +0700" stop="20261007040000 +0700" channel="trans7">
+  <programme start="20261008031600 +0700" stop="20261008040000 +0700" channel="trans7">
     <title lang="id">LOL COMEDIHA!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007040100 +0700" stop="20261007044500 +0700" channel="trans7">
+  <programme start="20261008040100 +0700" stop="20261008044500 +0700" channel="trans7">
     <title lang="id">BIG BANG!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007044600 +0700" stop="20261007053000 +0700" channel="trans7">
+  <programme start="20261008044600 +0700" stop="20261008053000 +0700" channel="trans7">
     <title lang="id">CERMIN KEHIDUPAN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007053100 +0700" stop="20261007063000 +0700" channel="trans7">
+  <programme start="20261008053100 +0700" stop="20261008063000 +0700" channel="trans7">
     <title lang="id">REDAKSI PAGI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007063100 +0700" stop="20261007073000 +0700" channel="trans7">
+  <programme start="20261008063100 +0700" stop="20261008073000 +0700" channel="trans7">
     <title lang="id">SPOTLITE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007073100 +0700" stop="20261007083000 +0700" channel="trans7">
+  <programme start="20261008073100 +0700" stop="20261008083000 +0700" channel="trans7">
     <title lang="id">SELEBRITA PAGI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007083100 +0700" stop="20261007093000 +0700" channel="trans7">
+  <programme start="20261008083100 +0700" stop="20261008093000 +0700" channel="trans7">
     <title lang="id">FOR YOUR PAGI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007093100 +0700" stop="20261007101500 +0700" channel="trans7">
+  <programme start="20261008093100 +0700" stop="20261008101500 +0700" channel="trans7">
     <title lang="id">SELEBRITA HEITS</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007101600 +0700" stop="20261007111500 +0700" channel="trans7">
+  <programme start="20261008101600 +0700" stop="20261008111500 +0700" channel="trans7">
     <title lang="id">BIG-BANG!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007111600 +0700" stop="20261007120000 +0700" channel="trans7">
+  <programme start="20261008111600 +0700" stop="20261008120000 +0700" channel="trans7">
     <title lang="id">ENAH BIKIN ENAK</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007120100 +0700" stop="20261007124500 +0700" channel="trans7">
+  <programme start="20261008120100 +0700" stop="20261008124500 +0700" channel="trans7">
     <title lang="id">JEJAK SI GUNDUL</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007124600 +0700" stop="20261007133000 +0700" channel="trans7">
+  <programme start="20261008124600 +0700" stop="20261008133000 +0700" channel="trans7">
     <title lang="id">BOCAH PETUALANG</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007133100 +0700" stop="20261007141500 +0700" channel="trans7">
+  <programme start="20261008133100 +0700" stop="20261008141500 +0700" channel="trans7">
     <title lang="id">KEPO</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007141600 +0700" stop="20261007144500 +0700" channel="trans7">
+  <programme start="20261008141600 +0700" stop="20261008144500 +0700" channel="trans7">
     <title lang="id">REDAKSI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007144600 +0700" stop="20261007151500 +0700" channel="trans7">
+  <programme start="20261008144600 +0700" stop="20261008151500 +0700" channel="trans7">
     <title lang="id">SPOTLITE ANTI KUDET</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007151600 +0700" stop="20261007160000 +0700" channel="trans7">
+  <programme start="20261008151600 +0700" stop="20261008160000 +0700" channel="trans7">
     <title lang="id">CUAN BOS</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007160100 +0700" stop="20261007170000 +0700" channel="trans7">
+  <programme start="20261008160100 +0700" stop="20261008170000 +0700" channel="trans7">
     <title lang="id">MAKAN RECEH</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007170100 +0700" stop="20261007180000 +0700" channel="trans7">
+  <programme start="20261008170100 +0700" stop="20261008180000 +0700" channel="trans7">
     <title lang="id">SELEBRITA UPDATE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007180100 +0700" stop="20261007184500 +0700" channel="trans7">
+  <programme start="20261008180100 +0700" stop="20261008184500 +0700" channel="trans7">
     <title lang="id">ON THE SPOT</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007184600 +0700" stop="20261007191500 +0700" channel="trans7">
+  <programme start="20261008184600 +0700" stop="20261008191500 +0700" channel="trans7">
     <title lang="id">SECRET STORY</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007191600 +0700" stop="20261007200000 +0700" channel="trans7">
+  <programme start="20261008191600 +0700" stop="20261008200000 +0700" channel="trans7">
     <title lang="id">POV (PASTI OBROLAN VIRAL)</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007200100 +0700" stop="20261007213000 +0700" channel="trans7">
+  <programme start="20261008200100 +0700" stop="20261008213000 +0700" channel="trans7">
     <title lang="id">ARISAN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007213100 +0700" stop="20261007224500 +0700" channel="trans7">
+  <programme start="20261008213100 +0700" stop="20261008224500 +0700" channel="trans7">
     <title lang="id">LAPOR PAK!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007224600 +0700" stop="20261007233000 +0700" channel="trans7">
+  <programme start="20261008224600 +0700" stop="20261008233000 +0700" channel="trans7">
     <title lang="id">THE POLICE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261007233100 +0700" stop="20261008001500 +0700" channel="trans7">
+  <programme start="20261008233100 +0700" stop="20261009001500 +0700" channel="trans7">
     <title lang="id">MISTERI DUNIA</title>
     <desc lang="id" />
     <category lang="id">General</category>
