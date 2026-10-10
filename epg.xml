@@ -6,228 +6,208 @@
   <channel id="trans7">
     <display-name>Trans 7</display-name>
   </channel>
-  <programme start="20261010050000 +0700" stop="20261010063000 +0700" channel="transtv">
+  <programme start="20261011050000 +0700" stop="20261011063000 +0700" channel="transtv">
     <title lang="id">ISLAM ITU INDAH</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010063000 +0700" stop="20261010073000 +0700" channel="transtv">
+  <programme start="20261011063000 +0700" stop="20261011073000 +0700" channel="transtv">
     <title lang="id">INSERT PAGI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010073000 +0700" stop="20261010090000 +0700" channel="transtv">
+  <programme start="20261011073000 +0700" stop="20261011090000 +0700" channel="transtv">
     <title lang="id">KAJIAN HATI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010090000 +0700" stop="20261010100000 +0700" channel="transtv">
+  <programme start="20261011090000 +0700" stop="20261011100000 +0700" channel="transtv">
     <title lang="id">ARJUNA MENCARI CINTA</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010100000 +0700" stop="20261010113000 +0700" channel="transtv">
+  <programme start="20261011100000 +0700" stop="20261011113000 +0700" channel="transtv">
     <title lang="id">AMBYAR IN WEEKEND</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010113000 +0700" stop="20261010123000 +0700" channel="transtv">
+  <programme start="20261011113000 +0700" stop="20261011123000 +0700" channel="transtv">
     <title lang="id">INSERT</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010123000 +0700" stop="20261010133000 +0700" channel="transtv">
+  <programme start="20261011123000 +0700" stop="20261011133000 +0700" channel="transtv">
     <title lang="id">THE LITTLE TALKCHOW</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010133000 +0700" stop="20261010140000 +0700" channel="transtv">
+  <programme start="20261011133000 +0700" stop="20261011140000 +0700" channel="transtv">
     <title lang="id">MASAK ANTI RIBET</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010140000 +0700" stop="20261010150000 +0700" channel="transtv">
+  <programme start="20261011140000 +0700" stop="20261011150000 +0700" channel="transtv">
     <title lang="id">NO SECRET: WEEKEND STORIES</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010150000 +0700" stop="20261010160000 +0700" channel="transtv">
+  <programme start="20261011150000 +0700" stop="20261011160000 +0700" channel="transtv">
     <title lang="id">INSERT INVESTIGASI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010160000 +0700" stop="20261010170000 +0700" channel="transtv">
+  <programme start="20261011160000 +0700" stop="20261011170000 +0700" channel="transtv">
     <title lang="id">SEHARI JADI RATU</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010170000 +0700" stop="20261010180000 +0700" channel="transtv">
+  <programme start="20261011170000 +0700" stop="20261011180000 +0700" channel="transtv">
     <title lang="id">BIKIN LAPER</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010180000 +0700" stop="20261010191500 +0700" channel="transtv">
+  <programme start="20261011180000 +0700" stop="20261011191500 +0700" channel="transtv">
     <title lang="id">INSERT STORY</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010191500 +0700" stop="20261010201500 +0700" channel="transtv">
+  <programme start="20261011191500 +0700" stop="20261011201500 +0700" channel="transtv">
     <title lang="id">MONITOR KETUA</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010201500 +0700" stop="20261010221500 +0700" channel="transtv">
-    <title lang="id">BIOSKOP TRANSTV  - HELLBOY: THE CROOKED MAN</title>
+  <programme start="20261011201500 +0700" stop="20261011221500 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - HUNTER KILLER</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010221500 +0700" stop="20261010234500 +0700" channel="transtv">
-    <title lang="id">BIOSKOP TRANSTV  - UNDERWORLD</title>
+  <programme start="20261011221500 +0700" stop="20261011234500 +0700" channel="transtv">
+    <title lang="id">BIOSKOP TRANSTV  - ACTS OF VENGEANCE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010233100 +0700" stop="20261011001500 +0700" channel="trans7">
-    <title lang="id">MISTERI DUNIA</title>
+  <programme start="20261011233100 +0700" stop="20261012004500 +0700" channel="trans7">
+    <title lang="id">THEATER: DERANGED</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010001600 +0700" stop="20261010004500 +0700" channel="trans7">
-    <title lang="id">REDAKSI MALAM</title>
+  <programme start="20261011004600 +0700" stop="20261011013000 +0700" channel="trans7">
+    <title lang="id">SUPERBIKE 2026 PORTUGAL - RACE 1</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010004600 +0700" stop="20261010013000 +0700" channel="trans7">
-    <title lang="id">SPORT 7</title>
-    <desc lang="id" />
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20261010013100 +0700" stop="20261010020000 +0700" channel="trans7">
+  <programme start="20261011013100 +0700" stop="20261011020000 +0700" channel="trans7">
     <title lang="id">BEST FISHING</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010020100 +0700" stop="20261010023000 +0700" channel="trans7">
+  <programme start="20261011020100 +0700" stop="20261011023000 +0700" channel="trans7">
     <title lang="id">DRACIN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010023100 +0700" stop="20261010031500 +0700" channel="trans7">
+  <programme start="20261011023100 +0700" stop="20261011031500 +0700" channel="trans7">
     <title lang="id">ON THE SPOT</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010031600 +0700" stop="20261010040000 +0700" channel="trans7">
+  <programme start="20261011031600 +0700" stop="20261011040000 +0700" channel="trans7">
     <title lang="id">LOL COMEDIHA!</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010040100 +0700" stop="20261010044500 +0700" channel="trans7">
+  <programme start="20261011040100 +0700" stop="20261011044500 +0700" channel="trans7">
     <title lang="id">MASJIDKU</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010044600 +0700" stop="20261010053000 +0700" channel="trans7">
-    <title lang="id">PESANTREND</title>
+  <programme start="20261011044600 +0700" stop="20261011053000 +0700" channel="trans7">
+    <title lang="id">JALUR LANGIT</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010053100 +0700" stop="20261010063000 +0700" channel="trans7">
+  <programme start="20261011053100 +0700" stop="20261011063000 +0700" channel="trans7">
     <title lang="id">REDAKSI PAGI AKHIR PEKAN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010063100 +0700" stop="20261010071500 +0700" channel="trans7">
+  <programme start="20261011063100 +0700" stop="20261011071500 +0700" channel="trans7">
     <title lang="id">SPOTLITE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010071600 +0700" stop="20261010080000 +0700" channel="trans7">
+  <programme start="20261011071600 +0700" stop="20261011080000 +0700" channel="trans7">
     <title lang="id">SELEBRITA PAGI ON THE WEEKEND</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010080100 +0700" stop="20261010084500 +0700" channel="trans7">
+  <programme start="20261011080100 +0700" stop="20261011084500 +0700" channel="trans7">
     <title lang="id">BIKIN SENENG</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010084600 +0700" stop="20261010093000 +0700" channel="trans7">
+  <programme start="20261011084600 +0700" stop="20261011094500 +0700" channel="trans7">
+    <title lang="id">HEITS ABIS</title>
+    <desc lang="id" />
+    <category lang="id">General</category>
+  </programme>
+  <programme start="20261011094600 +0700" stop="20261011103000 +0700" channel="trans7">
     <title lang="id">ENAKNYA MANTUL</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010093100 +0700" stop="20261010104500 +0700" channel="trans7">
-    <title lang="id">KUALIFIKASI MOTOGP 2026 PERTAMINA GRAND PRIX OF INDONESIA MANDALIKA (KUALIFIKASI MOTOGP)</title>
+  <programme start="20261011103100 +0700" stop="20261011150000 +0700" channel="trans7">
+    <title lang="id">MOTOGP 2026 PERTAMINA GRAND PRIX OF INDONESIA MANDALIKA (MOTO3, MOTO2. MOTOGP)</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010104600 +0700" stop="20261010233000 +0700" channel="trans7">
-    <title lang="id">JEJAK PETUALANG</title>
-    <desc lang="id" />
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20261010233100 +0700" stop="20261011133000 +0700" channel="trans7">
-    <title lang="id">KUALIFIKASI MOTOGP 2026 PERTAMINA GRAND PRIX OF INDONESIA MANDALIKA (KUALIFIKASI MOTO3 &amp; MOTO2)</title>
-    <desc lang="id" />
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20261010133100 +0700" stop="20261010143000 +0700" channel="trans7">
-    <title lang="id">MOTOGP SPRINT RACE 2026 PERTAMINA GRAND PRIX OF INDONESIA MANDALIKA</title>
-    <desc lang="id" />
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20261010143100 +0700" stop="20261010150000 +0700" channel="trans7">
-    <title lang="id">THE EXPLORER</title>
-    <desc lang="id" />
-    <category lang="id">General</category>
-  </programme>
-  <programme start="20261010150100 +0700" stop="20261010160000 +0700" channel="trans7">
+  <programme start="20261011150100 +0700" stop="20261011160000 +0700" channel="trans7">
     <title lang="id">REDAKSI AKHIR PEKAN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010160100 +0700" stop="20261010170000 +0700" channel="trans7">
+  <programme start="20261011160100 +0700" stop="20261011170000 +0700" channel="trans7">
     <title lang="id">MAKAN RECEH</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010170100 +0700" stop="20261010180000 +0700" channel="trans7">
+  <programme start="20261011170100 +0700" stop="20261011180000 +0700" channel="trans7">
     <title lang="id">SELEBRITA ON THE WEEKEND</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010180100 +0700" stop="20261010183000 +0700" channel="trans7">
+  <programme start="20261011180100 +0700" stop="20261011183000 +0700" channel="trans7">
     <title lang="id">LEGENDA BERTUAH</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010183100 +0700" stop="20261010191500 +0700" channel="trans7">
+  <programme start="20261011183100 +0700" stop="20261011191500 +0700" channel="trans7">
     <title lang="id">SECRET STORY</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010191600 +0700" stop="20261010200000 +0700" channel="trans7">
+  <programme start="20261011191600 +0700" stop="20261011200000 +0700" channel="trans7">
     <title lang="id">POV (PASTI OBROLAN VIRAL)</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010200100 +0700" stop="20261010213000 +0700" channel="trans7">
+  <programme start="20261011200100 +0700" stop="20261011213000 +0700" channel="trans7">
     <title lang="id">ARISAN</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010213100 +0700" stop="20261010224500 +0700" channel="trans7">
+  <programme start="20261011213100 +0700" stop="20261011224500 +0700" channel="trans7">
     <title lang="id">BTS</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010224600 +0700" stop="20261010233000 +0700" channel="trans7">
+  <programme start="20261011224600 +0700" stop="20261011233000 +0700" channel="trans7">
     <title lang="id">THE POLICE</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
-  <programme start="20261010233100 +0700" stop="20261011004500 +0700" channel="trans7">
-    <title lang="id">THEATER: DERANGED</title>
+  <programme start="20261011233100 +0700" stop="20261012004500 +0700" channel="trans7">
+    <title lang="id">FTV: WABAH MAUT SANG PENARI</title>
     <desc lang="id" />
     <category lang="id">General</category>
   </programme>
