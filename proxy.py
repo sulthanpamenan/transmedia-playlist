@@ -138,7 +138,7 @@ def get_epg():
 def get_master_playlist():
     scheme = request.headers.get("X-Forwarded-Proto", "https")
     host_url = request.host
-    epg_url = f"{scheme}://{host_url}/epg.xml"
+    epg_url = "https://sulthanpamenan.github.io/transmedia-playlist/epg.xml"
 
     m3u_text = (
         "<!--more-->\n"
