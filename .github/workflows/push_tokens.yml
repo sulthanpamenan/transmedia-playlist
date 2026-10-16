@@ -1,4 +1,4 @@
-name: Push Tokens to Render
+name: Push Tokens for Playlist
 
 on:
   repository_dispatch:
