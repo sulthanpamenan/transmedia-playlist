@@ -2,7 +2,7 @@ import time
 import requests
 from playwright.sync_api import sync_playwright
 
-PA_URL = "PROXY_SERVER_URL = "https://sulthanpamenan.pythonanywhere.com/update_token""
+PA_URL = "https://sulthanpamenan.pythonanywhere.com/update_token""
 
 CHANNELS = {
     "trans7": "https://20.detik.com/live/trans-7",
