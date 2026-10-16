@@ -2,7 +2,7 @@ import time
 import requests
 from playwright.sync_api import sync_playwright
 
-RENDER_URL = "https://transmedia-playlist.onrender.com/update_token"
+PA_URL = "PROXY_SERVER_URL = "https://sulthanpamenan.pythonanywhere.com/update_token""
 
 CHANNELS = {
     "trans7": "https://20.detik.com/live/trans-7",
@@ -94,7 +94,7 @@ for channel, url in CHANNELS.items():
     if token:
         payload = {"channel": channel, "url": token, "cookies": cookies}
         try:
-            res = requests.post(RENDER_URL, json=payload, timeout=10)
+            res = requests.post(PA_URL, json=payload, timeout=10)
             print(f"[✓] Token {channel} successfully sent! Response: {res.status_code}\n")
         except Exception as e:
             print(f"[!] Error sending to Render ({channel}): {e}\n")
