@@ -1,8 +1,12 @@
+import os
 import time
 import requests
 from playwright.sync_api import sync_playwright
 
-PA_URL = "https://sulthanpamenan.pythonanywhere.com/update_token"
+GIST_ID = os.environ.get("GIST_ID", "0489abda2da5420f8f4da73add29b134")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GIST_FILENAME = os.environ.get("GIST_FILENAME", "transmedia.json")
+GIST_API_URL = f"https://api.github.com/gists/{GIST_ID}"
 
 CHANNELS = {
     "trans7": "https://20.detik.com/live/trans-7",
@@ -89,16 +93,62 @@ def get_token_with_retry(channel_key, page_url, max_retries=3):
     return None, {}
 
 
-for channel, url in CHANNELS.items():
-    token, cookies = get_token_with_retry(channel, url)
-    if token:
-        payload = {"channel": channel, "url": token, "cookies": cookies}
-        try:
-            res = requests.post(PA_URL, json=payload, timeout=10)
-            print(f"[✓] Token {channel} successfully sent! Response: {res.status_code}\n")
-        except Exception as e:
-            print(f"[!] Error sending to Render ({channel}): {e}\n")
-    else:
-        print(f"[✘] Failed completely to retrieve token {channel}\n")
+def load_gist_tokens():
+    try:
+        headers = {
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        res = requests.get(GIST_API_URL, headers=headers, timeout=10)
+        if res.status_code == 200:
+            files = res.json().get("files", {})
+            file_data = files.get(GIST_FILENAME, {})
+            content = file_data.get("content", "{}")
+            import json
+            return json.loads(content)
+    except Exception as e:
+        print(f"[!] Error loading existing Gist tokens: {e}")
+    return {}
 
-    time.sleep(3)
+
+def save_gist_tokens(tokens):
+    import json
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "files": {
+            GIST_FILENAME: {
+                "content": json.dumps(tokens, indent=4)
+            }
+        }
+    }
+    res = requests.patch(GIST_API_URL, headers=headers, json=payload, timeout=10)
+    res.raise_for_status()
+    print("[✓] Gist tokens successfully updated via GitHub Actions!")
+
+
+if __name__ == "__main__":
+    current_tokens = load_gist_tokens()
+    updated = False
+
+    for channel, url in CHANNELS.items():
+        token, cookies = get_token_with_retry(channel, url)
+        if token:
+            current_tokens[channel] = {
+                "url": token,
+                "cookies": cookies
+            }
+            updated = True
+            print(f"[✓] Token {channel} collected successfully!\n")
+        else:
+            print(f"[✘] Failed completely to retrieve token {channel}\n")
+        time.sleep(3)
+
+    if updated:
+        try:
+            save_gist_tokens(current_tokens)
+        except Exception as e:
+            print(f"[!] Failed to save tokens to Gist: {e}")
