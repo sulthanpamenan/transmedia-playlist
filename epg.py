@@ -113,7 +113,6 @@ def get_trans7_multi_day_schedule(days_ahead=2):
             soup = BeautifulSoup(res_main.text, "html.parser")
             script_tag = soup.find("script", id="__NEXT_DATA__")
             
-            # 1. Try extracting the buildId from the __NEXT_DATA__ JSON tag
             if script_tag and script_tag.string:
                 try:
                     next_data = json.loads(script_tag.string)
@@ -122,7 +121,6 @@ def get_trans7_multi_day_schedule(days_ahead=2):
                 except json.JSONDecodeError as jde:
                     logging.warning(f"JSONDecodeError while parsing __NEXT_DATA__ for Trans 7: {jde}")
             
-            # 2. Fallback: Use Regex to find the buildId if JSON parsing fails or the structure changes
             if not build_id:
                 logging.info("Attempting regex fallback to find buildId in HTML...")
                 match = re.search(r'"buildId"\s*:\s*"([^"]+)"', res_main.text)
@@ -132,7 +130,6 @@ def get_trans7_multi_day_schedule(days_ahead=2):
         else:
             logging.warning(f"Failed to access {base_url}, status code: {res_main.status_code}")
 
-        # 3. The final fallback if all the methods above fail (Static Fallback)
         if not build_id:
             build_id = "CIO-V18echGfrT93WPcqd"
             logging.warning(f"Using hardcoded fallback buildId: {build_id}")
